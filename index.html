@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Débora</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cor-fundo: #fff0f3;
+            --cor-envelope: #ff4d6d;
+            --cor-envelope-claro: #ff8fa3;
+            --cor-texto: #800e13;
+            --cor-papel: #ffffff;
+        }
+
+        body {
+            margin: 0; padding: 0;
+            display: flex; align-items: center; justify-content: center;
+            min-height: 100vh;
+            background: var(--cor-fundo);
+            font-family: 'Montserrat', sans-serif;
+            overflow: hidden;
+            transition: background 1.5s ease;
+            -webkit-font-smoothing: antialiased;
+            touch-action: manipulation;
+        }
+
+        body.dark-mode { background: #050505; }
+        canvas { position: absolute; top: 0; left: 0; pointer-events: none; z-index: 1; }
+
+        .container { 
+            z-index: 10; 
+            display: flex; flex-direction: column; align-items: center; 
+            position: relative; width: 100%;
+        }
+
+        h1 { 
+            font-size: 1.3rem; 
+            color: var(--cor-texto); 
+            transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 1s;
+            margin: 0 0 25px 0;
+            padding: 0 20px;
+            text-align: center;
+            z-index: 20;
+            font-weight: 800;
+        }
+
+        .dark-mode h1 { 
+            color: #fff; 
+            animation: glow 1.5s ease-in-out infinite alternate; 
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px #ff4d6d, 0 0 20px #ff4d6d; }
+            to { text-shadow: 0 0 20px #ff758f, 0 0 35px #ff4d6d, 0 0 45px #ff4d6d; }
+        }
+
+        .envelope-wrapper {
+            position: relative;
+            width: 280px; height: 200px;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--cor-envelope-claro), var(--cor-envelope));
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 20px 40px rgba(255, 77, 109, 0.4);
+            z-index: 5;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .envelope-wrapper::before {
+            content: '';
+            position: absolute; top: 0; left: 0;
+            width: 0; height: 0;
+            border-left: 140px solid transparent;
+            border-right: 140px solid transparent;
+            border-top: 110px solid var(--cor-envelope);
+            z-index: 15; 
+            transition: transform 0.5s ease;
+            transform-origin: top;
+        }
+
+        .envelope-wrapper.open::before { transform: rotateX(180deg); z-index: 2; }
+
+        .envelope-sides {
+            position: absolute; bottom: 0; left: 0;
+            width: 0; height: 0;
+            border-left: 140px solid rgba(255, 143, 163, 0.9);
+            border-right: 140px solid rgba(255, 143, 163, 0.9);
+            border-top: 100px solid transparent;
+            border-bottom: 100px solid var(--cor-envelope);
+            border-radius: 0 0 15px 15px;
+            z-index: 10; 
+        }
+
+        .message-box {
+            position: absolute; bottom: 20px; left: 50%;
+            transform: translateX(-50%);
+            width: 240px; height: 160px;
+            background: var(--cor-papel);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex; align-items: center; justify-content: center;
+            text-align: center; color: var(--cor-texto);
+            font-family: 'Montserrat', sans-serif; 
+            font-weight: 600;
+            font-size: 1.1rem; 
+            line-height: 1.4;
+            word-wrap: break-word;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            z-index: 6; 
+            opacity: 0;
+            transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s;
+        }
+
+        .envelope-wrapper.open .message-box { 
+            transform: translateX(-50%) translateY(-155px); 
+            opacity: 1; 
+        }
+
+        #btnMural {
+            display: none;
+            margin-top: 25px;
+            padding: 12px 25px;
+            background: #ff4d6d;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 0 15px rgba(255, 77, 109, 0.5);
+            transition: transform 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        #btnMural:active { transform: scale(0.95); }
+
+        .hint { margin-top: 25px; font-size: 0.8rem; opacity: 0.7; color: var(--cor-texto); font-weight: bold; }
+        .dark-mode .hint { display: none; }
+
+        .foto-viva {
+            position: absolute;
+            z-index: 2;
+            pointer-events: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            animation: flutuarAniversario linear forwards;
+            will-change: transform, opacity;
+            transform: translateZ(0);
+        }
+
+        @keyframes flutuarAniversario {
+            0% { transform: translateY(110vh) translateZ(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-20vh) translateZ(0) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="musica" src="505.mp3" preload="auto"></audio>
+    <canvas id="mainCanvas"></canvas>
+
+    <div class="container">
+        <h1 id="titulo">Estou aqui para te lembrar disso</h1>
+        <div id="envelope" class="envelope-wrapper" onclick="handleSurprise()">
+            <div class="envelope-sides"></div>
+            <div id="msg" class="message-box"></div>
+        </div>
+        
+        <button id="btnMural">Mural de fotos</button>
+        <p id="subtitulo" class="hint">Clique na cartinha para abrir</p>
+    </div>
+
+    <script>
+        const memorias = [
+            "Você é absurdamente LINDA...",
+            "Você é absurdamente ESPECIAL...",
+            "Você é a pessoa mais INCRÍVEL que conheço...",
+            "Você é a pessoa mais PERFEITA que conheço...",
+            "Você merece toda FELICIDADE do mundo nessa vida...",
+            "Você merece toda a PAZ do mundo nessa vida...",
+            "Você merece tudo o que é BOM nessa vida...",
+            "Você merece tudo o que te faz BEM nessa vida...",
+            "Você simplesmente merece TUDO...",
+            "Feliz Aniversário!!!!"
+        ];
+
+        let index = 0;
+        let bdayMode = false;
+        const musica = document.getElementById('musica');
+        const canvas = document.getElementById('mainCanvas');
+        const ctx = canvas.getContext('2d');
+        let parts = [];
+        let fworks = [];
+
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.onresize = resize; resize();
+
+        window.onload = () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tempoVolta = urlParams.get('t');
+            const surpresaPronta = urlParams.get('surpresa');
+
+            if (surpresaPronta === 'true') {
+                ativarModoAniversario();
+                if (tempoVolta) {
+                    musica.currentTime = parseFloat(tempoVolta);
+                    musica.play().catch(() => {
+                         document.body.onclick = () => { musica.play(); };
+                    });
+                }
+            }
+        };
+
+        function ativarModoAniversario() {
+            bdayMode = true;
+            index = memorias.length - 1;
+            const env = document.getElementById('envelope');
+            const box = document.getElementById('msg');
+            const tit = document.getElementById('titulo');
+            const btn = document.getElementById('btnMural');
+
+            document.body.classList.add('dark-mode');
+            tit.innerText = "Parabéns, Dedéeeee!";
+            box.innerText = "Feliz Aniversário!!!!";
+            env.classList.add('open');
+            tit.style.transform = "translateY(-155px)";
+            
+            btn.style.display = 'block';
+            btn.onclick = () => {
+                const agora = musica.currentTime;
+                musica.pause();
+                musica.src = "";
+                musica.load();
+                window.location.href = `mural.html?t=${agora}&surpresa=true`;
+            };
+            setInterval(spawnPhotos, 1000);
+        }
+
+        function handleSurprise() {
+            const env = document.getElementById('envelope');
+            const box = document.getElementById('msg');
+            const tit = document.getElementById('titulo');
+
+            if (bdayMode) return; 
+
+            if (index === 0) {
+                musica.play().then(() => {
+                    musica.pause();
+                    musica.currentTime = 0;
+                }).catch(() => {});
+            }
+
+            if (env.classList.contains('open')) {
+                env.classList.remove('open');
+                tit.style.transform = "translateY(0)";
+                setTimeout(() => {
+                    index++;
+                    if (index >= memorias.length) index = 0;
+                    box.innerText = memorias[index];
+                    
+                    if (memorias[index].toLowerCase().includes("aniversário")) {
+                        ativarModoAniversario();
+                        musica.play();
+                    } else {
+                        env.classList.add('open');
+                        tit.style.transform = "translateY(-155px)";
+                        spawnHearts();
+                    }
+                }, 500);
+            } else {
+                box.innerText = memorias[index];
+                env.classList.add('open');
+                tit.style.transform = "translateY(-155px)";
+                spawnHearts();
+            }
+        }
+
+        function spawnPhotos() {
+            if (document.querySelectorAll('.foto-viva').length > 8) return;
+            const img = document.createElement('img');
+            const sorteio = Math.floor(Math.random() * 3);
+            if (sorteio === 0) img.src = 'foto.png';
+            else if (sorteio === 1) img.src = 'foto2.png';
+            else img.src = 'foto3.png';
+            img.className = 'foto-viva';
+            const randomX = Math.random() * 85; 
+            img.style.left = randomX + "vw";
+            const duracao = Math.random() * 3 + 5;
+            img.style.animationDuration = duracao + "s";
+            const largura = Math.random() * 35 + 45; 
+            img.style.width = largura + "px";
+            img.addEventListener('animationend', () => { img.remove(); });
+            document.body.appendChild(img);
+        }
+
+        function spawnHearts() {
+            const count = bdayMode ? 5 : 12;
+            for(let i=0; i<count; i++) {
+                parts.push({
+                    type: 'h', x: Math.random()*canvas.width, y: canvas.height+10,
+                    s: Math.random()*15+10, vel: Math.random()*3+2, op: 1
+                });
+            }
+        }
+
+        class Firework {
+            constructor() {
+                this.x = Math.random()*canvas.width; this.y = canvas.height;
+                this.vel = Math.random()*-8-7; this.color = `hsl(${Math.random()*360}, 100%, 60%)`;
+                this.exp = false;
+            }
+            update() {
+                this.y += this.vel; this.vel += 0.15;
+                if(this.vel >= 0 && !this.exp) {
+                    this.exp = true;
+                    const pCount = window.innerWidth < 600 ? 30 : 60;
+                    for(let i=0; i<pCount; i++) parts.push(new Particle(this.x, this.y, this.color));
+                }
+            }
+            draw() {
+                if(!this.exp) {
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath(); ctx.arc(this.x, this.y, 2, 0, Math.PI*2); ctx.fill();
+                }
+            }
+        }
+
+        class Particle {
+            constructor(x, y, c) {
+                this.x = x; this.y = y; this.c = c;
+                this.vx = Math.random()*4-2; this.vy = Math.random()*4-2; this.op = 1;
+            }
+            update() { this.x += this.vx; this.y += this.vy; this.vy += 0.1; this.op -= 0.015; }
+            draw() {
+                ctx.globalAlpha = this.op; ctx.fillStyle = this.c;
+                ctx.beginPath(); ctx.arc(this.x, this.y, 1.5, 0, Math.PI*2); ctx.fill();
+            }
+        }
+
+        function loop() {
+            ctx.fillStyle = bdayMode ? 'rgba(5,5,5,0.3)' : 'rgba(255, 240, 243, 1)';
+            if(!bdayMode) ctx.clearRect(0,0,canvas.width, canvas.height);
+            else ctx.fillRect(0,0,canvas.width, canvas.height);
+            if(bdayMode && Math.random() < 0.05) fworks.push(new Firework());
+            fworks.forEach((f, i) => { f.update(); f.draw(); if(f.exp && parts.filter(p => p.type !== 'h').length === 0) fworks.splice(i,1); });
+            parts.forEach((p, i) => {
+                if(p.type === 'h') {
+                    ctx.globalAlpha = p.op; ctx.fillStyle = '#ff4d6d'; ctx.font = p.s+"px Arial";
+                    ctx.fillText("❤️", p.x, p.y); p.y -= p.vel; p.op -= 0.01;
+                } else { p.update(); p.draw(); }
+                if(p.op <= 0) parts.splice(i,1);
+            });
+            requestAnimationFrame(loop);
+        }
+        loop();
+    </script>
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mural da Débora</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&family=Caveat:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #fff0f3;
+            font-family: 'Montserrat', sans-serif;
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh;
+        }
+        
+        h1 { color: #ff4d6d; text-align: center; margin-bottom: 30px; font-weight: 800; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 20px;
+            width: 100%; max-width: 950px;
+        }
+
+        .photo-card {
+            background: white;
+            padding: 10px 10px 5px 10px;
+            border-radius: 4px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            touch-action: manipulation;
+        }
+
+        .photo-card:hover { transform: scale(1.05) rotate(1deg); }
+
+        .grid img {
+            width: 100%; aspect-ratio: 1 / 1; 
+            object-fit: cover;
+            border-radius: 2px;
+        }
+
+        .card-caption {
+            font-family: 'Caveat', cursive;
+            color: #444;
+            font-size: 1.3rem;
+            margin: 10px 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .modal {
+            display: none;
+            position: fixed; z-index: 1000;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95);
+            flex-direction: column;
+            align-items: center; justify-content: center;
+        }
+
+        .modal img {
+            max-width: 90%; max-height: 70%;
+            border: 12px solid white;
+            border-radius: 4px;
+        }
+
+        #modalCaption {
+            color: white;
+            font-family: 'Caveat', cursive;
+            font-size: 2rem;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .fechar-modal { position: absolute; top: 20px; right: 25px; color: white; font-size: 40px; cursor: pointer; }
+
+        .btn-voltar {
+            margin: 40px 0;
+            padding: 12px 35px;
+            background: #ff4d6d;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Mural da Garota mais Linda</h1>
+
+    <div class="grid">
+        <div class="photo-card" onclick="abrirFoto(this)">
+            <img src="mural1.jpeg">
+            <p class="card-caption">O olhar</p>
+        </div>
+        <div class="photo-card" onclick="abrirFoto(this)">
+            <img src="mural2.jpeg">
+            <p class="card-caption">As expressões</p>
+        </div>
+        <div class="photo-card" onclick="abrirFoto(this)">
+            <img src="mural3.jpeg">
+            <p class="card-caption">O jeitinho</p>
+        </div>
+        <div class="photo-card" onclick="abrirFoto(this)">
+            <img src="mural4.jpeg">
+            <p class="card-caption">O outro jeitinho</p>
+        </div>
+        <div class="photo-card" onclick="abrirFoto(this)">
+            <img src="mural5.jpeg">
+            <p class="card-caption">O corpão</p>
+        </div>
+        <div class="photo-card" onclick="abrirFoto(this)">
+            <img src="mural6.jpg">
+            <p class="card-caption">A fofura</p>
+        </div>      
+    </div>
+
+    <button id="voltarBtn" class="btn-voltar">Voltar à Cartinha</button>
+
+    <div id="meuModal" class="modal" onclick="fecharFoto()">
+        <span class="fechar-modal">&times;</span>
+        <img id="imgModal">
+        <div id="modalCaption"></div>
+    </div>
+
+    <script>
+        let musicaMural;
+
+        function abrirFoto(container) {
+            const modal = document.getElementById("meuModal");
+            const imgModal = document.getElementById("imgModal");
+            const modalCap = document.getElementById("modalCaption");
+            
+            const imgSource = container.querySelector('img').src;
+            const textSource = container.querySelector('.card-caption').innerText;
+
+            modal.style.display = "flex";
+            imgModal.src = imgSource;
+            modalCap.innerText = textSource;
+        }
+
+        function fecharFoto() {
+            document.getElementById("meuModal").style.display = "none";
+        }
+
+        window.onload = () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tempoMusica = urlParams.get('t');
+            
+            setTimeout(() => {
+                musicaMural = new Audio('505.mp3');
+                musicaMural.loop = true;
+
+                if (tempoMusica) {
+                    musicaMural.currentTime = parseFloat(tempoMusica);
+                    musicaMural.play().catch(() => {
+                        document.body.addEventListener('click', () => { 
+                            musicaMural.play(); 
+                        }, { once: true });
+                    });
+                }
+            }, 100);
+
+            document.getElementById('voltarBtn').onclick = (e) => {
+                e.preventDefault();
+                const agora = musicaMural ? musicaMural.currentTime : 0;
+                
+                if(musicaMural) {
+                    musicaMural.pause();
+                    musicaMural.src = "";
+                    musicaMural.load();
+                }
+                
+                window.location.href = `index.html?t=${agora}&surpresa=true`;
+            };
+        };
+    </script>
+</body>
+</html>
