@@ -7,170 +7,226 @@
     <title>Para Debora</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&family=Caveat:wght@700&display=swap" rel="stylesheet">
     <style>
-        :root { --cor-fundo: #fff0f3; --cor-envelope: #ff4d6d; --cor-texto: #800e13; --cor-papel: #ffffff; }
-        body { margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; background: var(--cor-fundo); overflow-x: hidden; transition: background 1s; }
+        :root {
+            --cor-fundo: #fff0f3;
+            --cor-envelope: #ff4d6d;
+            --cor-envelope-claro: #ff8fa3;
+            --cor-texto: #800e13;
+            --cor-papel: #ffffff;
+        }
+
+        body {
+            margin: 0; padding: 0;
+            display: flex; align-items: center; justify-content: center;
+            min-height: 100vh; background: var(--cor-fundo);
+            font-family: 'Montserrat', sans-serif; overflow-x: hidden;
+            transition: background 1.5s ease; -webkit-font-smoothing: antialiased;
+        }
+
         body.dark-mode { background: #050505; }
         canvas { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 1; }
 
-        /* SEÇÕES */
-        #secao-cartinha, #secao-mural { width: 100%; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; z-index: 10; }
-        #secao-mural { display: none; padding: 20px 20px 100px 20px; box-sizing: border-box; justify-content: flex-start; }
+        /* CONTÊINERES DE SEÇÃO */
+        #secao-cartinha, #secao-mural {
+            position: relative; z-index: 10; width: 100%; display: flex; flex-direction: column; align-items: center;
+        }
+        #secao-mural { display: none; padding: 40px 20px 120px 20px; justify-content: flex-start; min-height: 100vh; box-sizing: border-box; }
 
-        /* CARTINHA */
-        h1 { font-size: 1.4rem; color: var(--cor-texto); text-align: center; margin-bottom: 25px; font-weight: 800; transition: color 1s; }
-        .dark-mode h1 { color: #fff; text-shadow: 0 0 10px #ff4d6d; }
-        .envelope-wrapper { position: relative; width: 320px; height: 200px; cursor: pointer; background: #ff4d6d; border-radius: 0 0 15px 15px; }
-        .envelope-wrapper::before { content: ''; position: absolute; top: 0; left: 0; width: 0; height: 0; border-left: 160px solid transparent; border-right: 160px solid transparent; border-top: 110px solid #ff4d6d; z-index: 15; transition: transform 0.5s; transform-origin: top; }
+        /* DESIGN ORIGINAL DA CARTINHA */
+        h1 { font-size: 1.4rem; color: var(--cor-texto); text-align: center; margin: 0 0 25px 0; font-weight: 800; transition: color 1s; }
+        .dark-mode h1 { color: #fff; animation: glow 1.5s ease-in-out infinite alternate; }
+
+        .envelope-wrapper {
+            position: relative; width: 360px; height: 220px; cursor: pointer;
+            background: linear-gradient(135deg, var(--cor-envelope-claro), var(--cor-envelope));
+            border-radius: 0 0 15px 15px; box-shadow: 0 20px 40px rgba(255, 77, 109, 0.4);
+        }
+        .envelope-wrapper::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 0; height: 0;
+            border-left: 180px solid transparent; border-right: 180px solid transparent;
+            border-top: 130px solid var(--cor-envelope); z-index: 15; transition: transform 0.5s ease; transform-origin: top;
+        }
         .envelope-wrapper.open::before { transform: rotateX(180deg); z-index: 2; }
-        .message-box { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); width: 280px; height: 160px; background: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; text-align: center; padding: 15px; font-weight: 600; opacity: 0; transition: transform 0.7s, opacity 0.4s; z-index: 6; box-sizing: border-box; color: var(--cor-texto); }
-        .envelope-wrapper.open .message-box { transform: translateX(-50%) translateY(-130px); opacity: 1; }
+        .envelope-sides { position: absolute; bottom: 0; left: 0; width: 0; height: 0; border-left: 180px solid rgba(255, 143, 163, 0.9); border-right: 180px solid rgba(255, 143, 163, 0.9); border-top: 110px solid transparent; border-bottom: 110px solid var(--cor-envelope); border-radius: 0 0 15px 15px; z-index: 10; }
 
-        /* MURAL */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; width: 100%; max-width: 800px; margin-top: 20px; }
-        .photo-card { background: white; padding: 8px; border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; text-align: center; }
-        .photo-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; filter: sepia(80%) blur(3px); transition: filter 1s; }
+        .message-box {
+            position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%);
+            width: 320px; height: 190px; background: var(--cor-papel); border-radius: 8px;
+            padding: 15px; display: flex; align-items: center; justify-content: center; text-align: center;
+            color: var(--cor-texto); font-weight: 600; font-size: 1.15rem; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            z-index: 6; opacity: 0; transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s; box-sizing: border-box;
+        }
+        .envelope-wrapper.open .message-box { transform: translateX(-50%) translateY(-145px); opacity: 1; }
+
+        /* MURAL DESIGN ORIGINAL */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; width: 100%; max-width: 1000px; }
+        .photo-card { background: white; padding: 12px; border-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); cursor: pointer; text-align: center; }
+        .photo-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; filter: sepia(80%) blur(5px); transition: filter 1.5s; }
         .photo-card.revelada img { filter: sepia(0%) blur(0px); }
-        .photo-card p { font-family: 'Caveat', cursive; font-size: 1.2rem; margin: 8px 0 0 0; opacity: 0; transition: opacity 1s; }
+        .photo-card p { font-family: 'Caveat', cursive; font-size: 1.4rem; margin: 10px 0 0 0; opacity: 0; transition: opacity 1.5s; }
         .photo-card.revelada p { opacity: 1; }
 
         /* BOTÕES */
-        #btnMural, #btnVoltar { padding: 12px 30px; background: #ff4d6d; color: white; border: none; border-radius: 25px; font-weight: 800; cursor: pointer; margin-top: 20px; display: none; box-shadow: 0 4px 10px rgba(255,77,109,0.4); }
-        #btnVoltar { position: fixed; bottom: 20px; display: none; z-index: 100; }
+        #btnMural, #btnVoltar {
+            padding: 12px 35px; background: #ff4d6d; color: white; border: none; border-radius: 25px;
+            font-weight: 800; cursor: pointer; margin-top: 30px; display: none; box-shadow: 0 5px 15px rgba(255,77,109,0.4);
+        }
+        #btnVoltar { position: fixed; bottom: 30px; display: none; z-index: 100; }
 
-        /* TRAIL & FOTOS VIVAS */
-        .trail-photo { position: fixed; pointer-events: none; z-index: 9999; width: 35px; height: 35px; border-radius: 5px; border: 2px solid white; animation: moveUp 1s forwards; }
-        @keyframes moveUp { 100% { transform: translateY(-50px); opacity: 0; } }
-        .foto-viva { position: fixed; pointer-events: none; z-index: 3; border-radius: 10px; animation: floatUp linear forwards; }
+        /* ELEMENTOS VIVOS */
+        .foto-viva { position: fixed; z-index: 3; pointer-events: none; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); animation: floatUp linear forwards; }
         @keyframes floatUp { 0% { transform: translateY(110vh) rotate(0deg); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; } }
+        
+        .trail-element { position: fixed; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); animation: moveUpFade 1s linear forwards; }
+        @keyframes moveUpFade { 100% { transform: translate(-50%, -100px) scale(0.3); opacity: 0; } }
+        .trail-photo { width: 40px; height: 40px; border-radius: 8px; border: 2px solid white; object-fit: cover; }
+        .trail-heart { color: #ff4d6d; font-size: 20px; }
 
         .rgb { font-weight: 800; background: linear-gradient(to right, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #8b00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 200% auto; animation: rgb-anim 3s linear infinite; }
         @keyframes rgb-anim { to { background-position: 200% center; } }
+        @keyframes glow { from { text-shadow: 0 0 10px #ff4d6d; } to { text-shadow: 0 0 20px #ff758f, 0 0 30px #ff4d6d; } }
     </style>
 </head>
 <body>
 
 <audio id="musica" src="505.mp3" preload="auto" loop></audio>
-<canvas id="canvas"></canvas>
+<canvas id="mainCanvas"></canvas>
 
 <div id="secao-cartinha">
     <h1 id="titulo">Estou aqui para te lembrar disso</h1>
-    <div id="envelope" class="envelope-wrapper" onclick="proximaMensagem()">
-        <div class="message-box" id="msg"></div>
+    <div id="envelope" class="envelope-wrapper" onclick="handleSurprise()">
+        <div class="envelope-sides"></div>
+        <div id="msg" class="message-box"></div>
     </div>
-    <button id="btnMural" onclick="irParaMural()">Ver Mural de Fotos</button>
+    <button id="btnMural" onclick="irMural()">Ver Mural de Fotos</button>
 </div>
 
 <div id="secao-mural">
-    <h1 style="color: #ff4d6d">Mural da Garota mais Linda</h1>
+    <h1 style="color: #ff4d6d">Mural da Garota mais Linda ❤️</h1>
     <div class="grid">
-        <div class="photo-card" onclick="revelar(this)"><img src="mural1.jpeg"><p>O olhar...</p></div>
-        <div class="photo-card" onclick="revelar(this)"><img src="mural2.jpeg"><p>As expressões...</p></div>
-        <div class="photo-card" onclick="revelar(this)"><img src="mural3.jpeg"><p>O jeitinho...</p></div>
-        <div class="photo-card" onclick="revelar(this)"><img src="mural4.jpeg"><p>O outro jeitinho...</p></div>
-        <div class="photo-card" onclick="revelar(this)"><img src="mural5.jpeg"><p>O corpão...</p></div>
-        <div class="photo-card" onclick="revelar(this)"><img src="mural6.jpg"><p>A fofura...</p></div>
+        <div class="photo-card" onclick="this.classList.add('revelada')"><img src="mural1.jpeg"><p>O olhar...</p></div>
+        <div class="photo-card" onclick="this.classList.add('revelada')"><img src="mural2.jpeg"><p>As expressões...</p></div>
+        <div class="photo-card" onclick="this.classList.add('revelada')"><img src="mural3.jpeg"><p>O jeitinho...</p></div>
+        <div class="photo-card" onclick="this.classList.add('revelada')"><img src="mural4.jpeg"><p>O outro jeitinho...</p></div>
+        <div class="photo-card" onclick="this.classList.add('revelada')"><img src="mural5.jpeg"><p>O corpão...</p></div>
+        <div class="photo-card" onclick="this.classList.add('revelada')"><img src="mural6.jpg"><p>A fofura...</p></div>
     </div>
-    <button id="btnVoltar" onclick="irParaCartinha()">Voltar à Cartinha</button>
+    <button id="btnVoltar" onclick="irCartinha()">Voltar à Cartinha</button>
 </div>
 
 <script>
-    const msgList = [
+    const memorias = [
         "Você é absurdamente<br><span class='rgb'>LINDA...</span>",
         "Você é absurdamente<br><span class='rgb'>ESPECIAL...</span>",
         "Você é a pessoa mais<br><span class='rgb'>INCRÍVEL</span> que conheço...",
-        "Você merece toda a<br><span class='rgb'>PAZ</span> do mundo...",
+        "Você merece toda a<br><span class='rgb'>FELICIDADE</span> do mundo...",
         "Você simplesmente merece<br><span class='rgb'>TUDO...</span>",
         "<span class='rgb'>Feliz Aniversário!!!!</span>"
     ];
 
-    let currentIdx = 0, bdayMode = false, trailIdx = 0;
+    let index = 0, bdayMode = false, trailIndex = 0, lastTrailTime = 0;
     const musica = document.getElementById('musica');
+    const canvas = document.getElementById('mainCanvas');
+    const ctx = canvas.getContext('2d');
+    let parts = [], fworks = [];
 
-    function proximaMensagem() {
+    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    window.onresize = resize; resize();
+
+    function handleSurprise() {
         if (bdayMode) return;
         const env = document.getElementById('envelope');
-        const msgDiv = document.getElementById('msg');
-        
+        const box = document.getElementById('msg');
         if (env.classList.contains('open')) {
             env.classList.remove('open');
             setTimeout(() => {
-                currentIdx++;
-                if (currentIdx >= msgList.length) currentIdx = msgList.length - 1;
-                msgDiv.innerHTML = msgList[currentIdx];
-                if (currentIdx === msgList.length - 1) ativarBday();
+                index++;
+                if (index >= memorias.length) index = memorias.length - 1;
+                box.innerHTML = memorias[index];
+                if (index === memorias.length - 1) ativarModoBday();
                 else env.classList.add('open');
             }, 500);
         } else {
-            msgDiv.innerHTML = msgList[currentIdx];
+            box.innerHTML = memorias[index];
             env.classList.add('open');
         }
     }
 
-    function ativarBday() {
+    function ativarModoBday() {
         bdayMode = true;
-        document.body.classList.add('dark-mode');
-        document.getElementById('titulo').innerText = "Parabéns, Dedé!";
-        document.getElementById('envelope').classList.add('open');
-        document.getElementById('btnMural').style.display = 'block';
         musica.play();
-        setInterval(spawnPhoto, 1500);
+        document.body.classList.add('dark-mode');
+        document.getElementById('titulo').innerText = "Parabéns, Dedéeeee!";
+        document.getElementById('btnMural').style.display = 'block';
+        setInterval(spawnPhoto, 1000);
     }
 
     function spawnPhoto() {
-        if (document.querySelectorAll('.foto-viva').length > 5) return;
+        if (document.querySelectorAll('.foto-viva').length > 8) return;
         const img = document.createElement('img');
         img.src = ['foto.png', 'foto2.png', 'foto3.png'][Math.floor(Math.random()*3)];
         img.className = 'foto-viva';
-        img.style.left = Math.random()*80 + 'vw';
-        img.style.width = '50px';
-        img.style.animationDuration = (Math.random()*3 + 4) + 's';
+        img.style.left = Math.random()*85 + 'vw';
+        img.style.width = (Math.random()*30 + 40) + 'px';
+        img.style.animationDuration = (Math.random()*3 + 5) + 's';
         document.body.appendChild(img);
         img.addEventListener('animationend', () => img.remove());
     }
 
-    function irParaMural() {
+    function irMural() {
         document.getElementById('secao-cartinha').style.display = 'none';
         document.getElementById('secao-mural').style.display = 'flex';
         document.getElementById('btnVoltar').style.display = 'block';
         window.scrollTo(0,0);
     }
 
-    function irParaCartinha() {
+    function irCartinha() {
         document.getElementById('secao-mural').style.display = 'none';
         document.getElementById('secao-cartinha').style.display = 'flex';
         document.getElementById('btnVoltar').style.display = 'none';
     }
 
-    function revelar(el) { el.classList.add('revelada'); }
-
-    // Rastro de fotos
-    document.addEventListener('touchmove', (e) => {
-        if (!bdayMode) return;
-        const t = e.touches[0];
-        const img = document.createElement('img');
-        img.src = ['foto.png', 'foto2.png', 'foto3.png'][trailIdx++ % 3];
-        img.className = 'trail-photo';
-        img.style.left = t.clientX + 'px'; img.style.top = t.clientY + 'px';
-        document.body.appendChild(img);
-        setTimeout(() => img.remove(), 1000);
-    }, {passive: true});
-
-    // Canvas simplificado para não pesar
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-    window.onresize = resize; resize();
-
-    function anim() {
-        ctx.clearRect(0,0,canvas.width, canvas.height);
+    // TRAIL ORIGINAL
+    function createTrail(x, y) {
+        const now = Date.now();
+        if (now - lastTrailTime < 100) return;
+        lastTrailTime = now;
+        const el = document.createElement(bdayMode ? 'img' : 'div');
+        el.className = 'trail-element';
         if (bdayMode) {
-            ctx.fillStyle = "white";
-            ctx.font = "20px Arial";
-            if (Math.random() > 0.9) ctx.fillText("✨", Math.random()*canvas.width, Math.random()*canvas.height);
+            el.src = ['foto.png', 'foto2.png', 'foto3.png'][trailIndex++ % 3];
+            el.classList.add('trail-photo');
+        } else {
+            el.innerHTML = '❤️'; el.classList.add('trail-heart');
         }
-        requestAnimationFrame(anim);
+        el.style.left = x + 'px'; el.style.top = y + 'px';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 1000);
     }
-    anim();
+    document.addEventListener('mousemove', (e) => createTrail(e.clientX, e.clientY));
+    document.addEventListener('touchmove', (e) => createTrail(e.touches[0].clientX, e.touches[0].clientY), {passive: true});
+
+    // FOGOS ORIGINAIS
+    class Firework {
+        constructor() { this.x = Math.random()*canvas.width; this.y = canvas.height; this.vel = Math.random()*-8-7; this.color = `hsl(${Math.random()*360}, 100%, 60%)`; this.exp = false; }
+        update() { this.y += this.vel; this.vel += 0.15; if(this.vel >= 0 && !this.exp) { this.exp = true; for(let i=0; i<40; i++) parts.push(new Particle(this.x, this.y, this.color)); } }
+        draw() { if(!this.exp) { ctx.fillStyle = this.color; ctx.beginPath(); ctx.arc(this.x, this.y, 2, 0, Math.PI*2); ctx.fill(); } }
+    }
+    class Particle {
+        constructor(x,y,c) { this.x = x; this.y = y; this.c = c; this.vx = Math.random()*4-2; this.vy = Math.random()*4-2; this.op = 1; }
+        update() { this.x += this.vx; this.y += this.vy; this.vy += 0.1; this.op -= 0.015; }
+        draw() { ctx.globalAlpha = this.op; ctx.fillStyle = this.c; ctx.beginPath(); ctx.arc(this.x, this.y, 1.5, 0, Math.PI*2); ctx.fill(); }
+    }
+
+    function loop() {
+        ctx.fillStyle = bdayMode ? 'rgba(5,5,5,0.2)' : 'rgba(255, 240, 243, 1)';
+        if(!bdayMode) ctx.clearRect(0,0,canvas.width, canvas.height); else ctx.fillRect(0,0,canvas.width, canvas.height);
+        if(bdayMode && Math.random() < 0.05) fworks.push(new Firework());
+        for(let i=fworks.length-1; i>=0; i--) { fworks[i].update(); fworks[i].draw(); if(fworks[i].exp) fworks.splice(i,1); }
+        for(let i=parts.length-1; i>=0; i--) { parts[i].update(); parts[i].draw(); if(parts[i].op<=0) parts.splice(i,1); }
+        requestAnimationFrame(loop);
+    }
+    loop();
 </script>
 </body>
 </html>
