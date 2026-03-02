@@ -15,16 +15,22 @@
             --cor-papel: #ffffff;
         }
 
+        /* SPLASH SCREEN */
         #splash-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #fff0f3; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; z-index: 9999;
-            transition: opacity 0.5s ease;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #fff0f3;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease;
         }
         .heart-loader { font-size: 50px; animation: pulse 1.2s infinite; }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }
         #splash-screen p { margin-top: 20px; color: #ff4d6d; font-weight: 800; font-family: 'Montserrat', sans-serif; }
 
+        /* EASTER EGG */
         #easter-egg {
             position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
             background: rgba(255, 77, 109, 0.9); color: white;
@@ -34,44 +40,125 @@
         }
 
         body {
-            margin: 0; padding: 0; display: flex; align-items: center; justify-content: center;
-            min-height: 100vh; background: var(--cor-fundo); font-family: 'Montserrat', sans-serif;
-            overflow: hidden; transition: background 1.5s ease;
-            -webkit-font-smoothing: antialiased; touch-action: manipulation;
+            margin: 0; padding: 0;
+            display: flex; align-items: center; justify-content: center;
+            min-height: 100vh;
+            background: var(--cor-fundo);
+            font-family: 'Montserrat', sans-serif;
+            overflow: hidden;
+            transition: background 1.5s ease;
+            -webkit-font-smoothing: antialiased;
+            touch-action: manipulation;
         }
 
         body.dark-mode { background: #050505; }
         canvas { position: absolute; top: 0; left: 0; pointer-events: none; z-index: 1; }
+
         .container { z-index: 10; display: flex; flex-direction: column; align-items: center; position: relative; width: 100%; }
-        h1 { font-size: 1.4rem; color: var(--cor-texto); transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 1s; margin: 0 0 25px 0; padding: 0 20px; text-align: center; z-index: 20; font-weight: 800; }
+
+        h1 { 
+            font-size: 1.4rem; color: var(--cor-texto); 
+            transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 1s;
+            margin: 0 0 25px 0; padding: 0 20px; text-align: center; z-index: 20; font-weight: 800;
+        }
+
         .dark-mode h1 { color: #fff; animation: glow 1.5s ease-in-out infinite alternate; }
-        .rgb { font-weight: 800; background: linear-gradient(to right, #ff0000, #ff7f00, #ffff00, #00ff00, #00ffff, #0000ff, #8b00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 200% auto; animation: move-gradient 3s linear infinite; display: inline-block; }
+
+        .rgb {
+            font-weight: 800;
+            background: linear-gradient(to right, #ff0000, #ff7f00, #ffff00, #00ff00, #00ffff, #0000ff, #8b00ff);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-size: 200% auto; animation: move-gradient 3s linear infinite; display: inline-block;
+        }
+
         @keyframes move-gradient { to { background-position: 200% center; } }
-        @keyframes glow { from { text-shadow: 0 0 10px #ff4d6d, 0 0 20px #ff4d6d; } to { text-shadow: 0 0 20px #ff758f, 0 0 35px #ff4d6d, 0 0 45px #ff4d6d; } }
-        .envelope-wrapper { position: relative; width: 360px; height: 220px; cursor: pointer; background: linear-gradient(135deg, var(--cor-envelope-claro), var(--cor-envelope)); border-radius: 0 0 15px 15px; box-shadow: 0 20px 40px rgba(255, 77, 109, 0.4); z-index: 5; -webkit-tap-highlight-color: transparent; will-change: transform; }
-        .envelope-wrapper::before { content: ''; position: absolute; top: 0; left: 0; width: 0; height: 0; border-left: 180px solid transparent; border-right: 180px solid transparent; border-top: 130px solid var(--cor-envelope); z-index: 15; transition: transform 0.5s ease; transform-origin: top; }
+        @keyframes glow {
+            from { text-shadow: 0 0 10px #ff4d6d, 0 0 20px #ff4d6d; }
+            to { text-shadow: 0 0 20px #ff758f, 0 0 35px #ff4d6d, 0 0 45px #ff4d6d; }
+        }
+
+        .envelope-wrapper {
+            position: relative; width: 360px; height: 220px; cursor: pointer;
+            background: linear-gradient(135deg, var(--cor-envelope-claro), var(--cor-envelope));
+            border-radius: 0 0 15px 15px; box-shadow: 0 20px 40px rgba(255, 77, 109, 0.4);
+            z-index: 5; -webkit-tap-highlight-color: transparent; will-change: transform;
+        }
+
+        .envelope-wrapper::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 0; height: 0;
+            border-left: 180px solid transparent; border-right: 180px solid transparent;
+            border-top: 130px solid var(--cor-envelope); z-index: 15; 
+            transition: transform 0.5s ease; transform-origin: top;
+        }
+
         .envelope-wrapper.open::before { transform: rotateX(180deg); z-index: 2; }
-        .envelope-sides { position: absolute; bottom: 0; left: 0; width: 0; height: 0; border-left: 180px solid rgba(255, 143, 163, 0.9); border-right: 180px solid rgba(255, 143, 163, 0.9); border-top: 110px solid transparent; border-bottom: 110px solid var(--cor-envelope); border-radius: 0 0 15px 15px; z-index: 10; }
-        .message-box { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); width: 320px; height: 190px; background: var(--cor-papel); border-radius: 8px; padding: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: var(--cor-texto); font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 1.15rem; line-height: 1.4; box-shadow: 0 5px 15px rgba(0,0,0,0.1); z-index: 6; opacity: 0; transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s; will-change: transform, opacity; }
+
+        .envelope-sides {
+            position: absolute; bottom: 0; left: 0; width: 0; height: 0;
+            border-left: 180px solid rgba(255, 143, 163, 0.9);
+            border-right: 180px solid rgba(255, 143, 163, 0.9);
+            border-top: 110px solid transparent; border-bottom: 110px solid var(--cor-envelope);
+            border-radius: 0 0 15px 15px; z-index: 10; 
+        }
+
+        .message-box {
+            position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%);
+            width: 320px; height: 190px; background: var(--cor-papel); border-radius: 8px;
+            padding: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; color: var(--cor-texto); font-family: 'Montserrat', sans-serif; font-weight: 600;
+            font-size: 1.15rem; line-height: 1.4; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            z-index: 6; opacity: 0; transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s;
+            will-change: transform, opacity;
+        }
+
         .envelope-wrapper.open .message-box { transform: translateX(-50%) translateY(-145px); opacity: 1; }
+
         .no-anim * { transition: none !important; animation-duration: 0s !important; }
         .no-anim .rgb { animation: move-gradient 3s linear infinite !important; }
-        #btnMural { display: none; margin-top: 25px; padding: 12px 30px; background: #ff4d6d; color: white; border: none; border-radius: 25px; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1rem; cursor: pointer; z-index: 100; box-shadow: 0 0 15px rgba(255, 77, 109, 0.5); }
+
+        #btnMural {
+            display: none; margin-top: 25px; padding: 12px 30px; background: #ff4d6d;
+            color: white; border: none; border-radius: 25px; font-family: 'Montserrat', sans-serif;
+            font-weight: 800; font-size: 1rem; cursor: pointer; z-index: 100;
+            box-shadow: 0 0 15px rgba(255, 77, 109, 0.5);
+        }
+
         .hint { margin-top: 25px; font-size: 0.85rem; opacity: 0.7; color: var(--cor-texto); font-weight: bold; transition: opacity 0.3s ease; }
         .dark-mode .hint { display: none; }
-        .trail-element { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 4; user-select: none; animation: moveUpFadeOut 1s linear forwards; will-change: transform, opacity; }
+
+        .trail-element {
+            position: fixed; top: 0; left: 0; pointer-events: none; z-index: 4; 
+            user-select: none; animation: moveUpFadeOut 1s linear forwards; will-change: transform, opacity;
+        }
         .trail-photo { width: 40px; height: 40px; border-radius: 8px; border: 2px solid white; object-fit: cover; }
         .trail-heart { color: #ff4d6d; font-size: 20px; }
-        @keyframes moveUpFadeOut { 0% { transform: translate(-50%, -50%) translateY(0) scale(1); opacity: 0.8; } 100% { transform: translate(-50%, -50%) translateY(-60px) scale(0.3); opacity: 0; } }
-        .foto-viva { position: absolute; z-index: 3; pointer-events: none; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); animation: flutuarAniversario linear forwards; will-change: transform; }
-        @keyframes flutuarAniversario { 0% { transform: translateY(110vh) rotate(0deg); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; } }
+
+        @keyframes moveUpFadeOut {
+            0% { transform: translate(-50%, -50%) translateY(0) scale(1); opacity: 0.8; }
+            100% { transform: translate(-50%, -50%) translateY(-60px) scale(0.3); opacity: 0; }
+        }
+
+        .foto-viva {
+            position: absolute; z-index: 3; pointer-events: none; border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); animation: flutuarAniversario linear forwards;
+            will-change: transform;
+        }
+
+        @keyframes flutuarAniversario {
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; } 90% { opacity: 1; }
+            100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+        }
     </style>
 </head>
 <body>
+
     <div id="splash-screen"><div class="heart-loader">❤️</div><p>Preparando uma surpresa...</p></div>
     <div id="easter-egg">Sabia que você não resistiria! ❤️</div>
+
     <audio id="musica" src="505.mp3" preload="auto" loop></audio>
     <canvas id="mainCanvas"></canvas>
+
     <div id="mainContainer" class="container">
         <h1 id="titulo">Estou aqui para te lembrar disso</h1>
         <div id="envelope" class="envelope-wrapper" onclick="handleSurprise()">
@@ -83,11 +170,15 @@
     </div>
 
     <script>
+        // TÍTULO DINÂMICO + EASTER EGG
         window.onblur = () => document.title = "Ei, volta aqui! ❤️";
         window.onfocus = () => {
             document.title = "Para Débora";
             const egg = document.getElementById('easter-egg');
-            if (egg) { egg.style.opacity = '1'; setTimeout(() => egg.style.opacity = '0', 3000); }
+            if (egg) {
+                egg.style.opacity = '1';
+                setTimeout(() => egg.style.opacity = '0', 3000);
+            }
         };
 
         const memorias = [
@@ -103,11 +194,16 @@
             "<span class='rgb'>Feliz Aniversário!!!!</span>"
         ];
 
-        let index = 0, bdayMode = false, trailIndex = 0, lastTrailTime = 0, photoInterval = null;
+        let index = 0;
+        let bdayMode = false;
+        let trailIndex = 0;
+        let lastTrailTime = 0;
+        
         const musica = document.getElementById('musica');
         const canvas = document.getElementById('mainCanvas');
         const ctx = canvas.getContext('2d', { alpha: true });
-        let parts = [], fworks = [];
+        let parts = [];
+        let fworks = [];
 
         function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         window.addEventListener('resize', resize);
@@ -119,18 +215,113 @@
             const splash = document.getElementById('splash-screen');
 
             if (isSurpresa) {
+                // CORREÇÃO CRÍTICA MOBILE: Remove splash e trava música antes de qualquer render
                 splash.style.display = 'none';
                 document.body.classList.add('no-anim');
                 ativarModoAniversario();
+                
                 const t = urlParams.get('t');
-                if (t) { musica.currentTime = parseFloat(t); musica.play().catch(() => { document.body.addEventListener('click', () => musica.play(), { once: true }); }); }
-                for(let i=0; i<3; i++) spawnPhotos();
-                fworks.push(new Firework());
+                if (t) {
+                    musica.currentTime = parseFloat(t);
+                    musica.play().catch(() => {
+                        document.body.addEventListener('click', () => musica.play(), { once: true });
+                    });
+                }
+                for(let i=0; i<3; i++) spawnPhotos(); 
+                fworks.push(new Firework()); 
                 setTimeout(() => { document.body.classList.remove('no-anim'); }, 100);
             } else {
-                setTimeout(() => { splash.style.opacity = '0'; setTimeout(() => splash.remove(), 800); }, 1500);
+                setTimeout(() => {
+                    splash.style.opacity = '0';
+                    setTimeout(() => splash.remove(), 800);
+                }, 1500);
             }
         };
+
+        function createTrail(x, y) {
+            const now = Date.now();
+            if (now - lastTrailTime < 100) return;
+            lastTrailTime = now;
+            const element = document.createElement(bdayMode ? 'img' : 'div');
+            element.className = 'trail-element';
+            if (bdayMode) {
+                const fotos = ['foto.png', 'foto2.png', 'foto3.png'];
+                element.src = fotos[trailIndex % 3];
+                element.classList.add('trail-photo');
+                trailIndex++;
+            } else {
+                element.innerHTML = '❤️';
+                element.classList.add('trail-heart');
+                element.style.fontSize = (Math.random() * 10 + 15) + 'px';
+            }
+            element.style.left = x + 'px'; element.style.top = y + 'px';
+            document.body.appendChild(element);
+            setTimeout(() => element.remove(), 1000);
+        }
+
+        const handleMove = (e) => {
+            const x = e.touches ? e.touches[0].clientX : e.clientX;
+            const y = e.touches ? e.touches[0].clientY : e.clientY;
+            createTrail(x, y);
+        };
+
+        document.addEventListener('mousemove', handleMove);
+        document.addEventListener('touchmove', handleMove, { passive: true });
+        document.addEventListener('mousedown', handleMove);
+
+        function spawnHearts() {
+            for(let i=0; i<12; i++) {
+                parts.push({
+                    type: 'h', x: Math.random()*canvas.width, y: canvas.height+10,
+                    s: Math.random()*15+12, vel: Math.random()*3+2, op: 1
+                });
+            }
+        }
+
+        function handleSurprise() {
+            const env = document.getElementById('envelope');
+            const box = document.getElementById('msg');
+            const tit = document.getElementById('titulo');
+            const hint = document.getElementById('subtitulo');
+            if (bdayMode) return; 
+
+            if (env.classList.contains('open')) {
+                env.classList.remove('open');
+                tit.style.transform = "translateY(0)";
+                setTimeout(() => {
+                    if (index < memorias.length - 1) { index++; }
+                    box.innerHTML = memorias[index];
+                    if (index === memorias.length - 1) { 
+                        if (hint) hint.style.opacity = '0';
+                        ativarModoAniversario(); 
+                        musica.play(); 
+                    } else { 
+                        env.classList.add('open'); 
+                        tit.style.transform = "translateY(-145px)"; 
+                        spawnHearts(); 
+                    }
+                }, 500);
+            } else {
+                box.innerHTML = memorias[index];
+                env.classList.add('open');
+                tit.style.transform = "translateY(-145px)";
+                spawnHearts();
+            }
+        }
+
+        function ativarModoAniversario() {
+            bdayMode = true;
+            index = memorias.length - 1;
+            document.body.classList.add('dark-mode');
+            document.getElementById('titulo').innerText = "Parabéns, Dedéeeee!";
+            document.getElementById('msg').innerHTML = memorias[index];
+            document.getElementById('envelope').classList.add('open');
+            document.getElementById('titulo').style.transform = "translateY(-145px)";
+            const btn = document.getElementById('btnMural');
+            btn.style.display = 'block';
+            btn.onclick = () => { window.location.href = `mural.html?t=${musica.currentTime}&surpresa=true`; };
+            setInterval(spawnPhotos, 1000);
+        }
 
         function spawnPhotos() {
             if (document.querySelectorAll('.foto-viva').length > 8) return;
@@ -145,66 +336,43 @@
             img.addEventListener('animationend', () => img.remove());
         }
 
-        function ativarModoAniversario() {
-            if (bdayMode && photoInterval) return;
-            bdayMode = true;
-            index = memorias.length - 1;
-            document.body.classList.add('dark-mode');
-            document.getElementById('titulo').innerText = "Parabéns, Dedéeeee!";
-            document.getElementById('msg').innerHTML = memorias[index];
-            document.getElementById('envelope').classList.add('open');
-            document.getElementById('titulo').style.transform = "translateY(-145px)";
-            const btn = document.getElementById('btnMural');
-            btn.style.display = 'block';
-            btn.onclick = () => { window.location.href = `mural.html?t=${musica.currentTime}&surpresa=true`; };
-            if(photoInterval) clearInterval(photoInterval);
-            photoInterval = setInterval(spawnPhotos, 1000);
-        }
-
-        function handleSurprise() {
-            const env = document.getElementById('envelope'), box = document.getElementById('msg'), tit = document.getElementById('titulo'), hint = document.getElementById('subtitulo');
-            if (bdayMode) return;
-            if (env.classList.contains('open')) {
-                env.classList.remove('open'); tit.style.transform = "translateY(0)";
-                setTimeout(() => {
-                    if (index < memorias.length - 1) { index++; }
-                    box.innerHTML = memorias[index];
-                    if (index === memorias.length - 1) { if (hint) hint.style.opacity = '0'; ativarModoAniversario(); musica.play(); } 
-                    else { env.classList.add('open'); tit.style.transform = "translateY(-145px)"; spawnHearts(); }
-                }, 500);
-            } else { box.innerHTML = memorias[index]; env.classList.add('open'); tit.style.transform = "translateY(-145px)"; spawnHearts(); }
-        }
-
-        function createTrail(x, y) {
-            const now = Date.now(); if (now - lastTrailTime < 100) return; lastTrailTime = now;
-            const element = document.createElement(bdayMode ? 'img' : 'div');
-            element.className = 'trail-element';
-            if (bdayMode) { const fotos = ['foto.png', 'foto2.png', 'foto3.png']; element.src = fotos[trailIndex % 3]; element.classList.add('trail-photo'); trailIndex++; } 
-            else { element.innerHTML = '❤️'; element.classList.add('trail-heart'); element.style.fontSize = (Math.random() * 10 + 15) + 'px'; }
-            element.style.left = x + 'px'; element.style.top = y + 'px';
-            document.body.appendChild(element); setTimeout(() => element.remove(), 1000);
-        }
-
-        const handleMove = (e) => { const x = e.touches ? e.touches[0].clientX : e.clientX; const y = e.touches ? e.touches[0].clientY : e.clientY; createTrail(x, y); };
-        document.addEventListener('mousemove', handleMove);
-        document.addEventListener('touchmove', handleMove, { passive: true });
-        document.addEventListener('mousedown', handleMove);
-
-        function spawnHearts() { for(let i=0; i<12; i++) { parts.push({ type: 'h', x: Math.random()*canvas.width, y: canvas.height+10, s: Math.random()*15+12, vel: Math.random()*3+2, op: 1 }); } }
-
         function loop() {
             ctx.fillStyle = bdayMode ? 'rgba(5,5,5,0.3)' : 'rgba(255, 240, 243, 1)';
-            if(!bdayMode) ctx.clearRect(0,0,canvas.width, canvas.height); else ctx.fillRect(0,0,canvas.width, canvas.height);
+            if(!bdayMode) ctx.clearRect(0,0,canvas.width, canvas.height);
+            else ctx.fillRect(0,0,canvas.width, canvas.height);
             if(bdayMode && Math.random() < 0.05) fworks.push(new Firework());
-            for(let i = fworks.length - 1; i >= 0; i--) { fworks[i].update(); fworks[i].draw(); if(fworks[i].exp && parts.filter(p => p.type !== 'h').length === 0) fworks.splice(i,1); }
-            for(let i = parts.length - 1; i >= 0; i--) { const p = parts[i]; if(p.type === 'h') { ctx.globalAlpha = p.op; ctx.fillStyle = '#ff4d6d'; ctx.font = p.s+"px Arial"; ctx.fillText("❤️", p.x, p.y); p.y -= p.vel; p.op -= 0.01; } else { p.update(); p.draw(); } if(p.op <= 0) parts.splice(i,1); }
+            for(let i = fworks.length - 1; i >= 0; i--) {
+                fworks[i].update(); fworks[i].draw();
+                if(fworks[i].exp && parts.filter(p => p.type !== 'h').length === 0) fworks.splice(i,1);
+            }
+            for(let i = parts.length - 1; i >= 0; i--) {
+                const p = parts[i];
+                if(p.type === 'h') {
+                    ctx.globalAlpha = p.op; ctx.fillStyle = '#ff4d6d'; ctx.font = p.s+"px Arial";
+                    ctx.fillText("❤️", p.x, p.y); p.y -= p.vel; p.op -= 0.01;
+                } else { p.update(); p.draw(); }
+                if(p.op <= 0) parts.splice(i,1);
+            }
             requestAnimationFrame(loop);
         }
 
-        class Firework { constructor() { this.x = Math.random()*canvas.width; this.y = canvas.height; this.vel = Math.random()*-8-7; this.color = `hsl(${Math.random()*360}, 100%, 60%)`; this.exp = false; } update() { this.y += this.vel; this.vel += 0.15; if(this.vel >= 0 && !this.exp) { this.exp = true; for(let i=0; i<40; i++) parts.push(new Particle(this.x, this.y, this.color)); } } draw() { if(!this.exp) { ctx.fillStyle = this.color; ctx.beginPath(); ctx.arc(this.x, this.y, 2, 0, Math.PI*2); ctx.fill(); } } }
-        class Particle { constructor(x, y, c) { this.x = x; this.y = y; this.c = c; this.vx = Math.random()*4-2; this.vy = Math.random()*4-2; this.op = 1; } update() { this.x += this.vx; this.y += this.vy; this.vy += 0.1; this.op -= 0.015; } draw() { ctx.globalAlpha = this.op; ctx.fillStyle = this.c; ctx.beginPath(); ctx.arc(this.x, this.y, 1.5, 0, Math.PI*2); ctx.fill(); } }
+        class Firework {
+            constructor() { 
+                this.x = Math.random()*canvas.width; this.y = canvas.height; this.vel = Math.random()*-8-7; this.color = `hsl(${Math.random()*360}, 100%, 60%)`; this.exp = false; 
+            }
+            update() { 
+                this.y += this.vel; this.vel += 0.15; 
+                if(this.vel >= 0 && !this.exp) { this.exp = true; for(let i=0; i<40; i++) parts.push(new Particle(this.x, this.y, this.color)); } 
+            }
+            draw() { if(!this.exp) { ctx.fillStyle = this.color; ctx.beginPath(); ctx.arc(this.x, this.y, 2, 0, Math.PI*2); ctx.fill(); } }
+        }
+        class Particle {
+            constructor(x, y, c) { this.x = x; this.y = y; this.c = c; this.vx = Math.random()*4-2; this.vy = Math.random()*4-2; this.op = 1; }
+            update() { this.x += this.vx; this.y += this.vy; this.vy += 0.1; this.op -= 0.015; }
+            draw() { ctx.globalAlpha = this.op; ctx.fillStyle = this.c; ctx.beginPath(); ctx.arc(this.x, this.y, 1.5, 0, Math.PI*2); ctx.fill(); }
+        }
         requestAnimationFrame(loop);
-        
+
         const fotosMural = ['mural1.jpeg', 'mural2.jpeg', 'mural3.jpeg', 'mural4.jpeg', 'mural5.jpeg', 'mural6.jpg'];
         fotosMural.forEach(src => { const img = new Image(); img.src = src; });
     </script>
