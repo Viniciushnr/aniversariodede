@@ -56,6 +56,17 @@
             z-index: 5;
             margin-top: 15px;
         }
+
+        .envelope-wrapper.shake {
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
         
         .envelope-wrapper::before {
             content: ''; position: absolute; top: 0; left: 0; width: 0; height: 0;
@@ -100,6 +111,48 @@
             transition: opacity 0.5s ease;
         }
 
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; width: 100%; max-width: 1000px; }
+        
+        .photo-card { 
+            background: white; padding: 12px 12px 8px 12px; 
+            border-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            transition: transform 0.3s ease; cursor: pointer; 
+            text-align: center; position: relative; overflow: hidden;
+        }
+        .photo-card:hover { transform: scale(1.05) rotate(1deg); }
+
+        .photo-card::after {
+            content: ''; position: absolute; top: 0; left: -150%; width: 50%; height: 100%;
+            background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 100% );
+            transform: skewX(-25deg); pointer-events: none;
+        }
+        .photo-card:hover::after { animation: shimmerEffect 1.2s infinite; }
+        @keyframes shimmerEffect { 100% { left: 150%; } }
+
+        .photo-card img { 
+            width: 100%; aspect-ratio: 1/1; object-fit: cover; 
+            filter: sepia(80%) blur(5px); 
+            transition: filter 1.8s cubic-bezier(0.4, 0, 0.2, 1); 
+            border-radius: 2px; 
+        }
+        .photo-card.revelada img { filter: sepia(0%) blur(0px); }
+        
+        .photo-card p { font-family: 'Caveat', cursive; font-size: 1.4rem; margin: 10px 0 0 0; opacity: 0; transition: opacity 1.5s; color: #444; }
+        .photo-card.revelada p { opacity: 1; }
+
+        .modal { display: none; position: fixed; z-index: 1000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); flex-direction: column; align-items: center; justify-content: center; }
+        .modal img { max-width: 90%; max-height: 75%; border: 12px solid white; border-radius: 4px; object-fit: contain; }
+        
+        #imgModal {
+            filter: sepia(80%) blur(5px);
+            transition: filter 1.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        #imgModal.revelada { filter: sepia(0%) blur(0px); }
+
+        #modalCaption { color: white; font-family: 'Caveat', cursive; font-size: 2.2rem; margin-top: 20px; text-align: center; opacity: 0; transition: opacity 1.5s ease-in-out; }
+        #modalCaption.revelada { opacity: 1; }
+        .fechar-modal { position: absolute; top: 20px; right: 25px; color: white; font-size: 45px; cursor: pointer; }
+
         .rgb { 
             display: inline-block;
             margin: 2px 0;
@@ -110,19 +163,12 @@
             background-size: 200% auto; animation: rgb-anim 3s linear infinite; 
         }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; width: 100%; max-width: 1000px; }
-        .photo-card { background: white; padding: 12px; border-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); cursor: pointer; text-align: center; }
-        .photo-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; filter: sepia(80%) blur(5px); transition: filter 1.5s; }
-        .photo-card.revelada img { filter: sepia(0%) blur(0px); }
-        .photo-card p { font-family: 'Caveat', cursive; font-size: 1.4rem; margin: 10px 0 0 0; opacity: 0; transition: opacity 1.5s; }
-        .photo-card.revelada p { opacity: 1; }
-        .texto-final-mural { font-family: 'Caveat', cursive; font-size: 2.2rem; color: #ff4d6d; text-align: center; margin-top: 50px; margin-bottom: 20px; padding: 0 20px; opacity: 0.9; }
-
         #btnMural, #btnVoltar { padding: 12px 35px; background: #ff4d6d; color: white; border: none; border-radius: 25px; font-weight: 800; cursor: pointer; margin-top: 30px; display: none; box-shadow: 0 5px 15px rgba(255,77,109,0.4); }
         #btnVoltar { position: fixed; bottom: 30px; display: none; z-index: 100; }
 
         .foto-viva { position: fixed; z-index: 3; pointer-events: none; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); animation: floatUp linear forwards; }
         @keyframes floatUp { 0% { transform: translateY(110vh) rotate(0deg); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; } }
+
         .trail-element { position: fixed; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); animation: moveUpFade 1s linear forwards; }
         @keyframes moveUpFade { 100% { transform: translate(-50%, -100px) scale(0.3); opacity: 0; } }
         .trail-photo { width: 40px; height: 40px; border-radius: 8px; border: 2px solid white; object-fit: cover; }
@@ -150,17 +196,26 @@
 <div id="secao-mural">
     <h1 style="color: #ff4d6d; font-size: 32px; font-weight: 800; margin-bottom: 20px;">Mural da Garota mais Linda ❤️</h1>
     <div class="grid">
-        <div class="photo-card" onclick="this.classList.add('revelada')"><img src="mural1.jpeg"><p>O olhar...</p></div>
-        <div class="photo-card" onclick="this.classList.add('revelada')"><img src="mural2.jpeg"><p>As expressões...</p></div>
-        <div class="photo-card" onclick="this.classList.add('revelada')"><img src="mural3.jpeg"><p>O jeitinho...</p></div>
-        <div class="photo-card" onclick="this.classList.add('revelada')"><img src="mural4.jpeg"><p>O outro jeitinho...</p></div>
-        <div class="photo-card" onclick="this.classList.add('revelada')"><img src="mural5.jpeg"><p>O corpão...</p></div>
-        <div class="photo-card" onclick="this.classList.add('revelada')"><img src="mural6.jpg"><p>A fofura...</p></div>
+        <div class="photo-card" onclick="abrirFoto(this)"><img src="mural1.jpeg"><p>O olhar...</p></div>
+        <div class="photo-card" onclick="abrirFoto(this)"><img src="mural2.jpeg"><p>As expressões...</p></div>
+        <div class="photo-card" onclick="abrirFoto(this)"><img src="mural3.jpeg"><p>O jeitinho...</p></div>
+        <div class="photo-card" onclick="abrirFoto(this)"><img src="mural4.jpeg"><p>O outro jeitinho...</p></div>
+        <div class="photo-card" onclick="abrirFoto(this)"><img src="mural5.jpeg"><p>O corpão...</p></div>
+        <div class="photo-card" onclick="abrirFoto(this)"><img src="mural6.jpg"><p>A fofura...</p></div>
     </div>
     <button id="btnVoltar" onclick="irCartinha()">Voltar à Cartinha</button>
 </div>
 
+<div id="meuModal" class="modal" onclick="fecharFoto()">
+    <span class="fechar-modal">&times;</span>
+    <img id="imgModal">
+    <div id="modalCaption"></div>
+</div>
+
 <script>
+    window.onblur = () => document.title = "Ei, volta aqui! ❤️";
+    window.onfocus = () => document.title = "Para Débora";
+
     const memorias = [
             "Você é absurdamente<br><span class='rgb'>LINDA...</span>",
             "Você é absurdamente<br><span class='rgb'>ESPECIAL...</span>",
@@ -184,8 +239,10 @@
     function handleSurprise() {
         if (bdayMode) return;
         const env = document.getElementById('envelope'), box = document.getElementById('msg'), tit = document.getElementById('titulo'), ins = document.getElementById('instrucao');
-        
         const saltoTitulo = "-130px";
+
+        env.classList.add('shake');
+        setTimeout(() => env.classList.remove('shake'), 400);
 
         if (env.classList.contains('open')) {
             env.classList.remove('open');
@@ -197,6 +254,9 @@
                     env.classList.add('open');
                     tit.style.transform = `translateY(${saltoTitulo})`;
                     
+                    const rect = env.getBoundingClientRect();
+                    spawnHearts(rect.left + rect.width/2, rect.top + rect.height/2);
+
                     if (index >= 9) ins.style.display = 'none';
                     if (index === memorias.length - 1) ativarModoBday();
                 }
@@ -205,7 +265,17 @@
             box.innerHTML = memorias[index];
             env.classList.add('open');
             tit.style.transform = `translateY(${saltoTitulo})`;
+            
+            const rect = env.getBoundingClientRect();
+            spawnHearts(rect.left + rect.width/2, rect.top + rect.height/2);
+
             if (index >= 9) ins.style.display = 'none';
+        }
+    }
+
+    function spawnHearts(x, y) {
+        for(let i=0; i<45; i++) {
+            parts.push(new Particle(x, y, '#ff0033', true));
         }
     }
 
@@ -213,28 +283,54 @@
         bdayMode = true;
         musica.play().catch(() => {});
         document.body.classList.add('dark-mode');
-        
-        // AJUSTES DE ESPAÇAMENTO NA TELA FINAL
         const tit = document.getElementById('titulo');
         const box = document.getElementById('msg');
-        
         tit.innerText = "Parabéns, Dedéeeee!";
-        tit.style.transform = "translateY(-135px)"; // Sobe o título um pouco mais
-        box.style.transform = "translateX(-50%) translateY(-170px)"; // Papel fica um pouco mais baixo
-        
+        tit.style.transform = "translateY(-135px)"; 
+        box.style.transform = "translateX(-50%) translateY(-170px)"; 
         box.innerHTML = "<span class='rgb'>Feliz Aniversário!!!</span>";
         document.getElementById('btnMural').style.display = 'block';
-        setInterval(spawnPhoto, 1000);
+        setInterval(spawnPhoto, 1200);
     }
 
+    function abrirFoto(container) {
+        const jaRevelada = container.classList.contains('revelada');
+        container.classList.add('revelada');
+        
+        const modal = document.getElementById("meuModal");
+        const imgModal = document.getElementById("imgModal");
+        const modalCap = document.getElementById("modalCaption");
+        
+        imgModal.src = container.querySelector('img').src;
+        modalCap.innerText = container.querySelector('p').innerText;
+        
+        // Se NÃO estava revelada, faz a animação lenta no modal
+        if (!jaRevelada) {
+            imgModal.classList.remove('revelada');
+            modalCap.classList.remove('revelada');
+            modal.style.display = "flex";
+            setTimeout(() => {
+                imgModal.classList.add('revelada');
+                modalCap.classList.add('revelada');
+            }, 100);
+        } else {
+            // Se já estava revelada, abre o modal já nítido instantaneamente
+            imgModal.classList.add('revelada');
+            modalCap.classList.add('revelada');
+            modal.style.display = "flex";
+        }
+    }
+
+    function fecharFoto() { document.getElementById("meuModal").style.display = "none"; }
+
     function spawnPhoto() {
-        if (document.querySelectorAll('.foto-viva').length > 8) return;
+        if (document.querySelectorAll('.foto-viva').length > 6) return;
         const img = document.createElement('img');
         img.src = ['foto.png', 'foto2.png', 'foto3.png'][Math.floor(Math.random()*3)];
         img.className = 'foto-viva';
         img.style.left = Math.random()*85 + 'vw';
-        img.style.width = (Math.random()*30 + 40) + 'px';
-        img.style.animationDuration = (Math.random()*3 + 5) + 's';
+        img.style.width = (Math.random()*30 + 50) + 'px';
+        img.style.animationDuration = (Math.random()*3 + 6) + 's';
         document.body.appendChild(img);
         img.addEventListener('animationend', () => img.remove());
     }
@@ -265,20 +361,55 @@
     document.addEventListener('touchmove', (e) => createTrail(e.touches[0].clientX, e.touches[0].clientY), {passive: true});
 
     class Firework {
-        constructor() { this.x = Math.random()*canvas.width; this.y = canvas.height; this.vel = Math.random()*-8-7; this.color = `hsl(${Math.random()*360}, 100%, 60%)`; this.exp = false; }
-        update() { this.y += this.vel; this.vel += 0.15; if(this.vel >= 0 && !this.exp) { this.exp = true; for(let i=0; i<40; i++) parts.push(new Particle(this.x, this.y, this.color)); } }
+        constructor() { 
+            this.x = Math.random()*canvas.width; 
+            this.y = canvas.height; 
+            this.vel = Math.random()*-8-7; 
+            this.color = `hsl(${Math.random()*360}, 100%, 60%)`; 
+            this.exp = false; 
+        }
+        update() { 
+            this.y += this.vel; 
+            this.vel += 0.15; 
+            if(this.vel >= 0 && !this.exp) { 
+                this.exp = true; 
+                for(let i=0; i<20; i++) parts.push(new Particle(this.x, this.y, this.color)); 
+            } 
+        }
         draw() { if(!this.exp) { ctx.fillStyle = this.color; ctx.beginPath(); ctx.arc(this.x, this.y, 2, 0, Math.PI*2); ctx.fill(); } }
     }
+
     class Particle {
-        constructor(x,y,c) { this.x = x; this.y = y; this.c = c; this.vx = Math.random()*4-2; this.vy = Math.random()*4-2; this.op = 1; }
-        update() { this.x += this.vx; this.y += this.vy; this.vy += 0.1; this.op -= 0.015; }
-        draw() { ctx.globalAlpha = this.op; ctx.fillStyle = this.c; ctx.beginPath(); ctx.arc(this.x, this.y, 1.5, 0, Math.PI*2); ctx.fill(); }
+        constructor(x, y, c, isHeart = false) { 
+            this.x = x; this.y = y; this.c = c; 
+            this.isHeart = isHeart;
+            this.vx = Math.random()*12-6; 
+            this.vy = Math.random()*12-6; 
+            this.op = 1.2; 
+            this.size = isHeart ? Math.random()*15 + 12 : 1.5;
+        }
+        update() { 
+            this.x += this.vx; this.y += this.vy; 
+            this.vy += this.isHeart ? 0.04 : 0.08; 
+            this.op -= 0.008; 
+        }
+        draw() { 
+            ctx.globalAlpha = Math.min(1, this.op);
+            if(this.isHeart) {
+                ctx.fillStyle = this.c;
+                ctx.font = `${this.size}px serif`;
+                ctx.fillText('❤️', this.x, this.y);
+            } else {
+                ctx.fillStyle = this.c;
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fill(); 
+            }
+        }
     }
 
     function loop() {
         ctx.fillStyle = bdayMode ? 'rgba(5,5,5,0.2)' : 'rgba(255, 240, 243, 1)';
         if(!bdayMode) ctx.clearRect(0,0,canvas.width, canvas.height); else ctx.fillRect(0,0,canvas.width, canvas.height);
-        if(bdayMode && Math.random() < 0.05) fworks.push(new Firework());
+        if(bdayMode && Math.random() < 0.02) fworks.push(new Firework());
         for(let i=fworks.length-1; i>=0; i--) { fworks[i].update(); fworks[i].draw(); if(fworks[i].exp && parts.length === 0) fworks.splice(i,1); }
         for(let i=parts.length-1; i>=0; i--) { parts[i].update(); parts[i].draw(); if(parts[i].op<=0) parts.splice(i,1); }
         requestAnimationFrame(loop);
