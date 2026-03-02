@@ -15,7 +15,7 @@
             --cor-papel: #ffffff;
         }
 
-        /* CSS DO SPLASH SCREEN */
+        /* SPLASH SCREEN */
         #splash-screen {
             position: fixed;
             top: 0; left: 0;
@@ -27,12 +27,17 @@
             transition: opacity 0.8s ease;
         }
         .heart-loader { font-size: 50px; animation: pulse 1.2s infinite; }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.3); }
-            100% { transform: scale(1); }
-        }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }
         #splash-screen p { margin-top: 20px; color: #ff4d6d; font-weight: 800; font-family: 'Montserrat', sans-serif; }
+
+        /* EASTER EGG */
+        #easter-egg {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            background: rgba(255, 77, 109, 0.9); color: white;
+            padding: 10px 20px; border-radius: 20px; font-size: 0.9rem;
+            font-weight: 800; z-index: 10000; opacity: 0;
+            pointer-events: none; transition: opacity 0.5s ease;
+        }
 
         body {
             margin: 0; padding: 0;
@@ -49,21 +54,12 @@
         body.dark-mode { background: #050505; }
         canvas { position: absolute; top: 0; left: 0; pointer-events: none; z-index: 1; }
 
-        .container { 
-            z-index: 10; 
-            display: flex; flex-direction: column; align-items: center; 
-            position: relative; width: 100%;
-        }
+        .container { z-index: 10; display: flex; flex-direction: column; align-items: center; position: relative; width: 100%; }
 
         h1 { 
-            font-size: 1.4rem; 
-            color: var(--cor-texto); 
+            font-size: 1.4rem; color: var(--cor-texto); 
             transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 1s;
-            margin: 0 0 25px 0;
-            padding: 0 20px;
-            text-align: center;
-            z-index: 20;
-            font-weight: 800;
+            margin: 0 0 25px 0; padding: 0 20px; text-align: center; z-index: 20; font-weight: 800;
         }
 
         .dark-mode h1 { color: #fff; animation: glow 1.5s ease-in-out infinite alternate; }
@@ -71,11 +67,8 @@
         .rgb {
             font-weight: 800;
             background: linear-gradient(to right, #ff0000, #ff7f00, #ffff00, #00ff00, #00ffff, #0000ff, #8b00ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-size: 200% auto;
-            animation: move-gradient 3s linear infinite;
-            display: inline-block;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-size: 200% auto; animation: move-gradient 3s linear infinite; display: inline-block;
         }
 
         @keyframes move-gradient { to { background-position: 200% center; } }
@@ -85,95 +78,58 @@
         }
 
         .envelope-wrapper {
-            position: relative;
-            width: 360px; height: 220px;
-            cursor: pointer;
+            position: relative; width: 360px; height: 220px; cursor: pointer;
             background: linear-gradient(135deg, var(--cor-envelope-claro), var(--cor-envelope));
-            border-radius: 0 0 15px 15px;
-            box-shadow: 0 20px 40px rgba(255, 77, 109, 0.4);
-            z-index: 5;
-            -webkit-tap-highlight-color: transparent;
-            will-change: transform;
+            border-radius: 0 0 15px 15px; box-shadow: 0 20px 40px rgba(255, 77, 109, 0.4);
+            z-index: 5; -webkit-tap-highlight-color: transparent; will-change: transform;
         }
 
         .envelope-wrapper::before {
-            content: '';
-            position: absolute; top: 0; left: 0;
-            width: 0; height: 0;
-            border-left: 180px solid transparent;
-            border-right: 180px solid transparent;
-            border-top: 130px solid var(--cor-envelope);
-            z-index: 15; 
-            transition: transform 0.5s ease;
-            transform-origin: top;
+            content: ''; position: absolute; top: 0; left: 0; width: 0; height: 0;
+            border-left: 180px solid transparent; border-right: 180px solid transparent;
+            border-top: 130px solid var(--cor-envelope); z-index: 15; 
+            transition: transform 0.5s ease; transform-origin: top;
         }
 
         .envelope-wrapper.open::before { transform: rotateX(180deg); z-index: 2; }
 
         .envelope-sides {
-            position: absolute; bottom: 0; left: 0;
-            width: 0; height: 0;
+            position: absolute; bottom: 0; left: 0; width: 0; height: 0;
             border-left: 180px solid rgba(255, 143, 163, 0.9);
             border-right: 180px solid rgba(255, 143, 163, 0.9);
-            border-top: 110px solid transparent;
-            border-bottom: 110px solid var(--cor-envelope);
-            border-radius: 0 0 15px 15px;
-            z-index: 10; 
+            border-top: 110px solid transparent; border-bottom: 110px solid var(--cor-envelope);
+            border-radius: 0 0 15px 15px; z-index: 10; 
         }
 
         .message-box {
-            position: absolute; bottom: 15px; left: 50%;
-            transform: translateX(-50%);
-            width: 320px; height: 190px;
-            background: var(--cor-papel);
-            border-radius: 8px;
-            padding: 15px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-align: center; color: var(--cor-texto);
-            font-family: 'Montserrat', sans-serif; font-weight: 600;
-            font-size: 1.15rem; line-height: 1.4;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            z-index: 6; opacity: 0;
-            transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s;
+            position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%);
+            width: 320px; height: 190px; background: var(--cor-papel); border-radius: 8px;
+            padding: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; color: var(--cor-texto); font-family: 'Montserrat', sans-serif; font-weight: 600;
+            font-size: 1.15rem; line-height: 1.4; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            z-index: 6; opacity: 0; transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s;
             will-change: transform, opacity;
         }
 
         .envelope-wrapper.open .message-box { transform: translateX(-50%) translateY(-145px); opacity: 1; }
 
-        /* CLASSE PARA REMOVER ANIMAÇÕES AO VOLTAR */
-        .no-anim * { 
-            transition: none !important; 
-            animation-duration: 0s !important; 
-        }
+        .no-anim * { transition: none !important; animation-duration: 0s !important; }
         .no-anim .rgb { animation: move-gradient 3s linear infinite !important; }
 
         #btnMural {
-            display: none;
-            margin-top: 25px;
-            padding: 12px 30px;
-            background: #ff4d6d;
-            color: white;
-            border: none;
-            border-radius: 25px;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 800; font-size: 1rem;
-            cursor: pointer; z-index: 100;
+            display: none; margin-top: 25px; padding: 12px 30px; background: #ff4d6d;
+            color: white; border: none; border-radius: 25px; font-family: 'Montserrat', sans-serif;
+            font-weight: 800; font-size: 1rem; cursor: pointer; z-index: 100;
             box-shadow: 0 0 15px rgba(255, 77, 109, 0.5);
         }
 
-        .hint { 
-            margin-top: 25px; font-size: 0.85rem; opacity: 0.7; color: var(--cor-texto); font-weight: bold;
-            transition: opacity 0.3s ease;
-        }
-
+        .hint { margin-top: 25px; font-size: 0.85rem; opacity: 0.7; color: var(--cor-texto); font-weight: bold; transition: opacity 0.3s ease; }
         .dark-mode .hint { display: none; }
 
         .trail-element {
-            position: fixed; top: 0; left: 0; pointer-events: none;
-            z-index: 4; user-select: none; animation: moveUpFadeOut 1s linear forwards;
-            will-change: transform, opacity;
+            position: fixed; top: 0; left: 0; pointer-events: none; z-index: 4; 
+            user-select: none; animation: moveUpFadeOut 1s linear forwards; will-change: transform, opacity;
         }
-
         .trail-photo { width: 40px; height: 40px; border-radius: 8px; border: 2px solid white; object-fit: cover; }
         .trail-heart { color: #ff4d6d; font-size: 20px; }
 
@@ -190,18 +146,15 @@
 
         @keyframes flutuarAniversario {
             0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
+            10% { opacity: 1; } 90% { opacity: 1; }
             100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
         }
     </style>
 </head>
 <body>
 
-    <div id="splash-screen">
-        <div class="heart-loader">❤️</div>
-        <p>Preparando uma surpresa...</p>
-    </div>
+    <div id="splash-screen"><div class="heart-loader">❤️</div><p>Preparando uma surpresa...</p></div>
+    <div id="easter-egg">Sabia que você não resistiria! ❤️</div>
 
     <audio id="musica" src="505.mp3" preload="auto" loop></audio>
     <canvas id="mainCanvas"></canvas>
@@ -217,8 +170,16 @@
     </div>
 
     <script>
+        // TÍTULO DINÂMICO + EASTER EGG
         window.onblur = () => document.title = "Ei, volta aqui! ❤️";
-        window.onfocus = () => document.title = "Para Débora";
+        window.onfocus = () => {
+            document.title = "Para Débora";
+            const egg = document.getElementById('easter-egg');
+            if (egg) {
+                egg.style.opacity = '1';
+                setTimeout(() => egg.style.opacity = '0', 3000);
+            }
+        };
 
         const memorias = [
             "Você é absurdamente<br><span class='rgb'>LINDA...</span>",
@@ -244,10 +205,7 @@
         let parts = [];
         let fworks = [];
 
-        function resize() { 
-            canvas.width = window.innerWidth; 
-            canvas.height = window.innerHeight; 
-        }
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         window.addEventListener('resize', resize);
         resize();
 
@@ -257,7 +215,7 @@
             const splash = document.getElementById('splash-screen');
 
             if (isSurpresa) {
-                // SE FOR VOLTA DO MURAL: Remove o splash imediatamente sem carregar
+                // CORREÇÃO CRÍTICA MOBILE: Remove splash e trava música antes de qualquer render
                 splash.style.display = 'none';
                 document.body.classList.add('no-anim');
                 ativarModoAniversario();
@@ -271,12 +229,8 @@
                 }
                 for(let i=0; i<3; i++) spawnPhotos(); 
                 fworks.push(new Firework()); 
-
-                setTimeout(() => {
-                    document.body.classList.remove('no-anim');
-                }, 100);
+                setTimeout(() => { document.body.classList.remove('no-anim'); }, 100);
             } else {
-                // SE FOR A PRIMEIRA VEZ: Mostra o splash normalmente
                 setTimeout(() => {
                     splash.style.opacity = '0';
                     setTimeout(() => splash.remove(), 800);
@@ -300,8 +254,7 @@
                 element.classList.add('trail-heart');
                 element.style.fontSize = (Math.random() * 10 + 15) + 'px';
             }
-            element.style.left = x + 'px';
-            element.style.top = y + 'px';
+            element.style.left = x + 'px'; element.style.top = y + 'px';
             document.body.appendChild(element);
             setTimeout(() => element.remove(), 1000);
         }
@@ -330,19 +283,14 @@
             const box = document.getElementById('msg');
             const tit = document.getElementById('titulo');
             const hint = document.getElementById('subtitulo');
-            
             if (bdayMode) return; 
 
             if (env.classList.contains('open')) {
                 env.classList.remove('open');
                 tit.style.transform = "translateY(0)";
                 setTimeout(() => {
-                    if (index < memorias.length - 1) {
-                        index++;
-                    }
-                    
+                    if (index < memorias.length - 1) { index++; }
                     box.innerHTML = memorias[index];
-                    
                     if (index === memorias.length - 1) { 
                         if (hint) hint.style.opacity = '0';
                         ativarModoAniversario(); 
@@ -371,9 +319,7 @@
             document.getElementById('titulo').style.transform = "translateY(-145px)";
             const btn = document.getElementById('btnMural');
             btn.style.display = 'block';
-            btn.onclick = () => {
-                window.location.href = `mural.html?t=${musica.currentTime}&surpresa=true`;
-            };
+            btn.onclick = () => { window.location.href = `mural.html?t=${musica.currentTime}&surpresa=true`; };
             setInterval(spawnPhotos, 1000);
         }
 
@@ -396,8 +342,7 @@
             else ctx.fillRect(0,0,canvas.width, canvas.height);
             if(bdayMode && Math.random() < 0.05) fworks.push(new Firework());
             for(let i = fworks.length - 1; i >= 0; i--) {
-                fworks[i].update();
-                fworks[i].draw();
+                fworks[i].update(); fworks[i].draw();
                 if(fworks[i].exp && parts.filter(p => p.type !== 'h').length === 0) fworks.splice(i,1);
             }
             for(let i = parts.length - 1; i >= 0; i--) {
@@ -428,12 +373,8 @@
         }
         requestAnimationFrame(loop);
 
-        // PRÉ-CARREGA AS FOTOS DO MURAL
         const fotosMural = ['mural1.jpeg', 'mural2.jpeg', 'mural3.jpeg', 'mural4.jpeg', 'mural5.jpeg', 'mural6.jpg'];
-        fotosMural.forEach(src => {
-            const img = new Image();
-            img.src = src;
-        });
+        fotosMural.forEach(src => { const img = new Image(); img.src = src; });
     </script>
 </body>
 </html>
