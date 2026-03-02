@@ -7,82 +7,24 @@
     <title>Para Debora</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&family=Caveat:wght@700&display=swap" rel="stylesheet">
     <style>
-        body { 
-            background: #fff0f3; 
-            font-family: 'Montserrat', sans-serif; 
-            margin: 0; padding: 20px 20px 100px 20px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            min-height: 100vh; 
-            overflow-x: hidden; 
-        }
-        
+        body { background: #fff0f3; font-family: 'Montserrat', sans-serif; margin: 0; padding: 20px 20px 100px 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; }
         h1 { color: #ff4d6d; text-align: center; margin-bottom: 30px; font-weight: 800; }
-
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
-            gap: 20px; 
-            width: 100%; max-width: 1000px; 
-            z-index: 2; 
-            margin-bottom: 40px;
-        }
-        
-        .photo-card { 
-            background: white; padding: 12px 12px 8px 12px; 
-            border-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-            transition: transform 0.3s ease; cursor: pointer; 
-            text-align: center; display: flex; flex-direction: column; 
-            touch-action: manipulation; position: relative; overflow: hidden;
-            width: 100%; box-sizing: border-box;
-        }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; width: 100%; max-width: 1000px; z-index: 2; margin-bottom: 40px; }
+        .photo-card { background: white; padding: 12px; border-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: transform 0.3s ease; cursor: pointer; text-align: center; display: flex; flex-direction: column; touch-action: manipulation; position: relative; overflow: hidden; width: 100%; box-sizing: border-box; }
         .photo-card:hover { transform: scale(1.05) rotate(1deg); }
-
-        .grid img { 
-            width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 2px;
-            filter: sepia(80%) blur(5px) opacity(0.5);
-            will-change: filter;
-        }
-
-        .photo-card.animar.revelada img {
-            transition: filter 1.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .photo-card.revelada img, #imgModal.revelada {
-            filter: sepia(0%) blur(0px) opacity(1);
-        }
-
+        .grid img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 2px; filter: sepia(80%) blur(5px) opacity(0.5); will-change: filter; }
+        .photo-card.animar.revelada img { transition: filter 1.8s cubic-bezier(0.4, 0, 0.2, 1); }
+        .photo-card.revelada img, #imgModal.revelada { filter: sepia(0%) blur(0px) opacity(1); }
         .photo-card p { opacity: 0; font-family: 'Caveat', cursive; color: #444; font-size: 1.4rem; margin: 12px 0 5px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .photo-card.animar.revelada p { transition: opacity 1.5s ease-in-out; }
         .photo-card.revelada p { opacity: 1; }
-
-        #imgModal { 
-            filter: sepia(80%) blur(5px) opacity(0.5);
-            transition: filter 1.8s cubic-bezier(0.4, 0, 0.2, 1);
-            will-change: filter;
-        }
-
-        .photo-card::after {
-            content: ''; position: absolute; top: 0; left: -150%; width: 50%; height: 100%;
-            background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 100% );
-            transform: skewX(-25deg); pointer-events: none;
-        }
-        .photo-card:hover::after { animation: shimmerEffect 1.2s infinite; }
-        @keyframes shimmerEffect { 100% { left: 150%; } }
-
+        #imgModal { filter: sepia(80%) blur(5px) opacity(0.5); transition: filter 1.8s cubic-bezier(0.4, 0, 0.2, 1); will-change: filter; }
         .modal { display: none; position: fixed; z-index: 1000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); flex-direction: column; align-items: center; justify-content: center; }
         .modal img { max-width: 90%; max-height: 75%; border: 12px solid white; border-radius: 4px; object-fit: contain; }
         #modalCaption { color: white; font-family: 'Caveat', cursive; font-size: 2.2rem; margin-top: 20px; text-align: center; opacity: 0; transition: opacity 1.5s ease-in-out; }
         #modalCaption.revelada { opacity: 1; }
         .fechar-modal { position: absolute; top: 20px; right: 25px; color: white; font-size: 45px; cursor: pointer; }
-        
-        .btn-voltar { 
-            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
-            padding: 12px 40px; background: #ff4d6d; color: white; border: none; border-radius: 25px; font-family: 'Montserrat', sans-serif; font-weight: 800; cursor: pointer; z-index: 100; text-decoration: none; box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4); transition: transform 0.2s;
-        }
-        .btn-voltar:active { transform: translateX(-50%) scale(0.95); }
-
+        .btn-voltar { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); padding: 12px 40px; background: #ff4d6d; color: white; border: none; border-radius: 25px; font-family: 'Montserrat', sans-serif; font-weight: 800; cursor: pointer; z-index: 100; text-decoration: none; box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4); }
         .trail-photo { position: fixed; pointer-events: none; z-index: 9999; width: 40px; height: 40px; border-radius: 8px; border: 2px solid white; object-fit: cover; animation: moveUpFadeOut 1s linear forwards; }
         @keyframes moveUpFadeOut { 0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; } 100% { transform: translate(-50%, -50%) translateY(-50px) scale(0.2); opacity: 0; } }
     </style>
@@ -109,21 +51,17 @@
     </div>
 
     <script>
-        // TÍTULO DINÂMICO
         window.onblur = () => document.title = "Ei, volta aqui! ❤️";
         window.onfocus = () => document.title = "Para Débora";
 
-        let musicaMural;
-        let trailIndex = 0;
-        let lastTrailTime = 0;
+        let musicaMural = null;
+        let trailIndex = 0, lastTrailTime = 0;
 
         function carregarProgresso() {
             const revelados = JSON.parse(sessionStorage.getItem('fotosReveladas') || "[]");
             revelados.forEach(id => {
                 const card = document.getElementById(id);
-                if (card) {
-                    card.classList.add('revelada');
-                }
+                if (card) card.classList.add('revelada');
             });
         }
 
@@ -136,73 +74,49 @@
         }
 
         function abrirFoto(container, id) {
-            container.classList.add('animar');
-            container.classList.add('revelada');
+            container.classList.add('animar', 'revelada');
             salvarProgresso(id);
-
-            const modal = document.getElementById("meuModal");
-            const imgModal = document.getElementById("imgModal");
-            const modalCap = document.getElementById("modalCaption");
-            
-            imgModal.classList.remove('revelada');
-            modalCap.classList.remove('revelada');
+            const modal = document.getElementById("meuModal"), imgModal = document.getElementById("imgModal"), modalCap = document.getElementById("modalCaption");
+            imgModal.classList.remove('revelada'); modalCap.classList.remove('revelada');
             imgModal.src = container.querySelector('img').src;
             modalCap.innerText = container.querySelector('.card-caption').innerText;
-            
-            imgModal.onload = () => {
-                requestAnimationFrame(() => {
-                    setTimeout(() => { 
-                        imgModal.classList.add('revelada'); 
-                        modalCap.classList.add('revelada');
-                    }, 150);
-                });
-            };
+            imgModal.onload = () => { setTimeout(() => { imgModal.classList.add('revelada'); modalCap.classList.add('revelada'); }, 100); };
             modal.style.display = "flex";
         }
 
         function fecharFoto() { document.getElementById("meuModal").style.display = "none"; }
 
         function createTrailPhoto(x, y) {
-            const now = Date.now();
-            if (now - lastTrailTime < 150) return;
-            lastTrailTime = now;
+            const now = Date.now(); if (now - lastTrailTime < 150) return; lastTrailTime = now;
             const photo = document.createElement('img');
-            const fotos = ['foto.png', 'foto2.png', 'foto3.png'];
-            photo.src = fotos[trailIndex % 3];
-            trailIndex++;
-            photo.className = 'trail-photo';
-            photo.style.left = x + 'px'; photo.style.top = y + 'px';
-            document.body.appendChild(photo);
-            setTimeout(() => photo.remove(), 1000);
+            photo.src = ['foto.png', 'foto2.png', 'foto3.png'][trailIndex++ % 3];
+            photo.className = 'trail-photo'; photo.style.left = x + 'px'; photo.style.top = y + 'px';
+            document.body.appendChild(photo); setTimeout(() => photo.remove(), 1000);
         }
 
         document.addEventListener('mousemove', (e) => createTrailPhoto(e.clientX, e.clientY));
-        document.addEventListener('touchmove', (e) => createTrailPhoto(e.touches[0].clientX, e.touches[0].clientY));
+        document.addEventListener('touchmove', (e) => createTrailPhoto(e.touches[0].clientX, e.touches[0].clientY), {passive: true});
 
         window.onload = () => {
             carregarProgresso();
             const urlParams = new URLSearchParams(window.location.search);
             const t = urlParams.get('t');
             
-            // CORREÇÃO: Usa uma variável global para não criar múltiplos áudios
-            if (!window.musicaMural) {
-                window.musicaMural = new Audio('505.mp3');
-                window.musicaMural.loop = true;
+            if (!musicaMural) {
+                musicaMural = new Audio('505.mp3');
+                musicaMural.loop = true;
             }
-        
+
             if (t) {
-                window.musicaMural.currentTime = parseFloat(t);
-                // Só tenta dar o play se a música estiver pausada
-                if (window.musicaMural.paused) {
-                    window.musicaMural.play().catch(() => {
-                        document.body.addEventListener('click', () => window.musicaMural.play(), { once: true });
-                    });
-                }
+                musicaMural.currentTime = parseFloat(t);
+                musicaMural.play().catch(() => {
+                    document.body.addEventListener('click', () => musicaMural.play(), { once: true });
+                });
             }
             
             document.getElementById('voltarBtn').onclick = (e) => {
                 e.preventDefault();
-                window.location.href = `index.html?t=${window.musicaMural.currentTime}&surpresa=true`;
+                window.location.href = `index.html?t=${musicaMural.currentTime}&surpresa=true`;
             };
         };
     </script>
