@@ -8,10 +8,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&display=swap" rel="stylesheet">
     <style>
         :root { --cor-fundo: #fff0f3; --cor-envelope: #ff4d6d; --cor-envelope-claro: #ff8fa3; --cor-texto: #800e13; --cor-papel: #ffffff; }
-        #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff0f3; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.5s ease; }
+        
+        /* Splash Screen: Começa invisível para não dar flash no celular */
+        #splash-screen { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: #fff0f3; display: none; flex-direction: column; 
+            align-items: center; justify-content: center; z-index: 9999; 
+            transition: opacity 0.4s ease; 
+        }
         .heart-loader { font-size: 50px; animation: pulse 1.2s infinite; }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }
         #splash-screen p { margin-top: 20px; color: #ff4d6d; font-weight: 800; font-family: 'Montserrat', sans-serif; }
+
         #easter-egg { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(255, 77, 109, 0.9); color: white; padding: 10px 20px; border-radius: 20px; font-size: 0.9rem; font-weight: 800; z-index: 10000; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
         body { margin: 0; padding: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; background: var(--cor-fundo); font-family: 'Montserrat', sans-serif; overflow: hidden; transition: background 1.5s ease; -webkit-font-smoothing: antialiased; touch-action: manipulation; }
         body.dark-mode { background: #050505; }
@@ -78,28 +86,36 @@
             const splash = document.getElementById('splash-screen');
 
             if (isSurpresa) {
-                splash.style.display = 'none';
+                // VOLTA DO MURAL: Deleta o Splash e não roda música nova
+                splash.remove(); 
                 document.body.classList.add('no-anim');
                 ativarModoAniversario();
                 const t = urlParams.get('t');
-                if (t) { musica.currentTime = parseFloat(t); musica.play().catch(() => { document.body.addEventListener('click', () => musica.play(), { once: true }); }); }
+                if (t) {
+                    musica.currentTime = parseFloat(t);
+                    musica.play().catch(() => { document.body.addEventListener('click', () => musica.play(), { once: true }); });
+                }
                 for(let i=0; i<3; i++) spawnPhotos();
                 fworks.push(new Firework());
                 setTimeout(() => { document.body.classList.remove('no-anim'); }, 100);
             } else {
-                setTimeout(() => { splash.style.opacity = '0'; setTimeout(() => splash.remove(), 600); }, 1500);
+                // PRIMEIRA VEZ: Mostra o splash e depois apaga
+                splash.style.display = 'flex';
+                setTimeout(() => {
+                    splash.style.opacity = '0';
+                    setTimeout(() => splash.remove(), 500);
+                }, 1000);
             }
         };
 
         function spawnPhotos() {
-            if (document.querySelectorAll('.foto-viva').length > 8) return;
+            if (document.querySelectorAll('.foto-viva').length > 6) return;
             const img = document.createElement('img');
-            const s = Math.floor(Math.random() * 3);
-            img.src = s === 0 ? 'foto.png' : s === 1 ? 'foto2.png' : 'foto3.png';
+            img.src = ['foto.png', 'foto2.png', 'foto3.png'][Math.floor(Math.random() * 3)];
             img.className = 'foto-viva';
             img.style.left = (Math.random() * 80) + "vw";
             img.style.animationDuration = (Math.random() * 3 + 5) + "s";
-            img.style.width = (Math.random() * 35 + 45) + "px";
+            img.style.width = (Math.random() * 20 + 40) + "px";
             document.body.appendChild(img);
             img.addEventListener('animationend', () => img.remove());
         }
@@ -112,11 +128,10 @@
             document.getElementById('msg').innerHTML = memorias[memorias.length-1];
             document.getElementById('envelope').classList.add('open');
             document.getElementById('titulo').style.transform = "translateY(-145px)";
-            const btn = document.getElementById('btnMural');
-            btn.style.display = 'block';
-            btn.onclick = () => { window.location.href = `mural.html?t=${musica.currentTime}&surpresa=true`; };
+            document.getElementById('btnMural').style.display = 'block';
+            document.getElementById('btnMural').onclick = () => { window.location.href = `mural.html?t=${musica.currentTime}&surpresa=true`; };
             if(photoInterval) clearInterval(photoInterval);
-            photoInterval = setInterval(spawnPhotos, 1000);
+            photoInterval = setInterval(spawnPhotos, 1500);
         }
 
         function handleSurprise() {
@@ -134,7 +149,7 @@
         }
 
         function createTrail(x, y) {
-            const now = Date.now(); if (now - lastTrailTime < 100) return; lastTrailTime = now;
+            const now = Date.now(); if (now - lastTrailTime < 120) return; lastTrailTime = now;
             const el = document.createElement(bdayMode ? 'img' : 'div');
             el.className = 'trail-element';
             if (bdayMode) { el.src = ['foto.png', 'foto2.png', 'foto3.png'][trailIndex++ % 3]; el.classList.add('trail-photo'); } 
@@ -146,19 +161,19 @@
         document.addEventListener('mousemove', (e) => createTrail(e.clientX, e.clientY));
         document.addEventListener('touchmove', (e) => createTrail(e.touches[0].clientX, e.touches[0].clientY), {passive: true});
 
-        function spawnHearts() { for(let i=0; i<12; i++) { parts.push({ type: 'h', x: Math.random()*canvas.width, y: canvas.height+10, s: Math.random()*15+12, vel: Math.random()*3+2, op: 1 }); } }
+        function spawnHearts() { for(let i=0; i<8; i++) { parts.push({ type: 'h', x: Math.random()*canvas.width, y: canvas.height+10, s: Math.random()*15+12, vel: Math.random()*3+2, op: 1 }); } }
 
         function loop() {
             ctx.fillStyle = bdayMode ? 'rgba(5,5,5,0.3)' : 'rgba(255, 240, 243, 1)';
             if(!bdayMode) ctx.clearRect(0,0,canvas.width, canvas.height); else ctx.fillRect(0,0,canvas.width, canvas.height);
-            if(bdayMode && Math.random() < 0.05) fworks.push(new Firework());
+            if(bdayMode && Math.random() < 0.04) fworks.push(new Firework());
             for(let i = fworks.length - 1; i >= 0; i--) { fworks[i].update(); fworks[i].draw(); if(fworks[i].exp && parts.filter(p => p.type !== 'h').length === 0) fworks.splice(i,1); }
             for(let i = parts.length - 1; i >= 0; i--) { const p = parts[i]; if(p.type === 'h') { ctx.globalAlpha = p.op; ctx.fillStyle = '#ff4d6d'; ctx.font = p.s+"px Arial"; ctx.fillText("❤️", p.x, p.y); p.y -= p.vel; p.op -= 0.01; } else { p.update(); p.draw(); } if(p.op <= 0) parts.splice(i,1); }
             requestAnimationFrame(loop);
         }
 
-        class Firework { constructor() { this.x = Math.random()*canvas.width; this.y = canvas.height; this.vel = Math.random()*-8-7; this.color = `hsl(${Math.random()*360}, 100%, 60%)`; this.exp = false; } update() { this.y += this.vel; this.vel += 0.15; if(this.vel >= 0 && !this.exp) { this.exp = true; for(let i=0; i<40; i++) parts.push(new Particle(this.x, this.y, this.color)); } } draw() { if(!this.exp) { ctx.fillStyle = this.color; ctx.beginPath(); ctx.arc(this.x, this.y, 2, 0, Math.PI*2); ctx.fill(); } } }
-        class Particle { constructor(x, y, c) { this.x = x; this.y = y; this.c = c; this.vx = Math.random()*4-2; this.vy = Math.random()*4-2; this.op = 1; } update() { this.x += this.vx; this.y += this.vy; this.vy += 0.1; this.op -= 0.015; } draw() { ctx.globalAlpha = this.op; ctx.fillStyle = this.c; ctx.beginPath(); ctx.arc(this.x, this.y, 1.5, 0, Math.PI*2); ctx.fill(); } }
+        class Firework { constructor() { this.x = Math.random()*canvas.width; this.y = canvas.height; this.vel = Math.random()*-8-7; this.color = `hsl(${Math.random()*360}, 100%, 60%)`; this.exp = false; } update() { this.y += this.vel; this.vel += 0.15; if(this.vel >= 0 && !this.exp) { this.exp = true; for(let i=0; i<30; i++) parts.push(new Particle(this.x, this.y, this.color)); } } draw() { if(!this.exp) { ctx.fillStyle = this.color; ctx.beginPath(); ctx.arc(this.x, this.y, 2, 0, Math.PI*2); ctx.fill(); } } }
+        class Particle { constructor(x, y, c) { this.x = x; this.y = y; this.c = c; this.vx = Math.random()*4-2; this.vy = Math.random()*4-2; this.op = 1; } update() { this.x += this.vx; this.y += this.vy; this.vy += 0.1; this.op -= 0.02; } draw() { ctx.globalAlpha = this.op; ctx.fillStyle = this.c; ctx.beginPath(); ctx.arc(this.x, this.y, 1.5, 0, Math.PI*2); ctx.fill(); } }
         requestAnimationFrame(loop);
 
         const fotosMural = ['mural1.jpeg', 'mural2.jpeg', 'mural3.jpeg', 'mural4.jpeg', 'mural5.jpeg', 'mural6.jpg'];
