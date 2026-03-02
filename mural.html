@@ -183,18 +183,26 @@
             carregarProgresso();
             const urlParams = new URLSearchParams(window.location.search);
             const t = urlParams.get('t');
-            setTimeout(() => {
-                musicaMural = new Audio('505.mp3');
-                musicaMural.loop = true;
-                if (t) {
-                    musicaMural.currentTime = parseFloat(t);
-                    musicaMural.play().catch(() => document.body.addEventListener('click', () => { musicaMural.play(); }, { once: true }));
+            
+            // CORREÇÃO: Usa uma variável global para não criar múltiplos áudios
+            if (!window.musicaMural) {
+                window.musicaMural = new Audio('505.mp3');
+                window.musicaMural.loop = true;
+            }
+        
+            if (t) {
+                window.musicaMural.currentTime = parseFloat(t);
+                // Só tenta dar o play se a música estiver pausada
+                if (window.musicaMural.paused) {
+                    window.musicaMural.play().catch(() => {
+                        document.body.addEventListener('click', () => window.musicaMural.play(), { once: true });
+                    });
                 }
-            }, 100);
+            }
             
             document.getElementById('voltarBtn').onclick = (e) => {
                 e.preventDefault();
-                window.location.href = `index.html?t=${musicaMural.currentTime}&surpresa=true`;
+                window.location.href = `index.html?t=${window.musicaMural.currentTime}&surpresa=true`;
             };
         };
     </script>
