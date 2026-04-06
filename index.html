@@ -130,7 +130,12 @@
         .fechar-modal { position: absolute; top: 20px; right: 25px; color: white; font-size: 45px; cursor: pointer; }
 
         .foto-viva { position: fixed; z-index: 3; pointer-events: none; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); animation: floatUp linear forwards; }
-        @keyframes floatUp { 0% { transform: translateY(110vh) rotate(0deg); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; } }
+        @keyframes floatUp { 
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; } 
+            10% { opacity: 1; } 
+            90% { opacity: 1; } 
+            100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; } 
+        }
 
         .trail-element { position: fixed; pointer-events: none; z-index: 9999; animation: moveUpFade 1s linear forwards; }
         @keyframes moveUpFade { 100% { transform: translate(-50%, -100px) scale(0.3); opacity: 0; } }
@@ -159,7 +164,7 @@
 </div>
 
 <div id="secao-mural">
-    <h1 style="color: #ff4d6d; font-size: 32px; font-weight: 800; margin-bottom: 20px;">Mural da Garota mais Linda ❤️</h1>
+    <h1 style="color: #ff4d6d; font-size: 32px; font-weight: 800; margin-bottom: 20px;">Mural da Garota mais Linda</h1>
     <div class="grid">
         <div class="photo-card" onclick="abrirFoto(this)"><img src="mural1.jpeg"><p>O olhar...</p></div>
         <div class="photo-card" onclick="abrirFoto(this)"><img src="mural2.jpeg"><p>As expressões...</p></div>
@@ -174,8 +179,8 @@
 <div id="secao-video">
     <h1 style="color: #ff4d6d; font-size: 32px; font-weight: 800; margin-bottom: 20px;">Um vídeo para você!!</h1>
     <div class="video-container">
-        <video id="meuVideo" controls>
-            <source src="dedevideo.mp4" type="video/mp4">
+        <video id="meuVideo" controls preload="auto">
+            <source src="https://res.cloudinary.com/djvgmn8kl/video/upload/v1775437870/dedevideo_wv3pbz.mp4?raw=1" type="video/mp4">
         </video>
     </div>
     <button id="btnVoltarVideo" onclick="irCartinha()" style="display: block; margin-top: 30px;">Voltar à Cartinha</button>
@@ -241,6 +246,7 @@
     function spawnHearts(x, y) { for(let i=0; i<45; i++) parts.push(new Particle(x, y, '#ff0033', true)); }
 
     function ativarModoBday() {
+        if(bdayMode) return;
         bdayMode = true; musica.play().catch(() => {});
         document.body.classList.add('dark-mode');
         const tit = document.getElementById('titulo'), box = document.getElementById('msg');
@@ -250,7 +256,9 @@
         box.innerHTML = "<span class='rgb'>Feliz Aniversário!!!</span>";
         document.getElementById('btnMural').style.display = 'block';
         document.getElementById('btnVideo').style.display = 'block';
-        setInterval(spawnPhoto, 1200);
+        
+        // Intervalo fixo para as fotos não pararem
+        setInterval(spawnPhoto, 1500);
     }
 
     function spawnPhoto() {
@@ -280,39 +288,43 @@
     function fecharFoto() { document.getElementById("meuModal").style.display = "none"; }
 
     function createTrail(x, y) {
-        const now = Date.now(); if (now - lastTrailTime < 350) return; lastTrailTime = now;
+        const now = Date.now(); if (now - lastTrailTime < 400) return; lastTrailTime = now;
         const el = bdayMode ? document.createElement('img') : document.createElement('div');
         el.className = 'trail-element';
         if (bdayMode) { 
             el.src = ['foto.png', 'foto2.png', 'foto3.png'][trailIndex++ % 3]; 
             el.style.width = '40px'; el.style.height = '40px'; el.style.borderRadius = '8px'; el.style.border = '2px solid white'; el.style.objectFit = 'cover';
         } else { el.innerHTML = '❤️'; el.style.color = '#ff4d6d'; el.style.fontSize = '20px'; }
-        el.style.left = x + 'px'; el.style.top = y + 'px'; el.style.transform = 'translate(-50%, -50%)';
+        el.style.left = x + 'px'; el.style.top = y + 'px'; el.style.position = 'fixed'; el.style.transform = 'translate(-50%, -50%)';
         document.body.appendChild(el); setTimeout(() => el.remove(), 1000);
     }
     document.addEventListener('mousemove', (e) => createTrail(e.clientX, e.clientY));
     document.addEventListener('touchmove', (e) => createTrail(e.touches[0].clientX, e.touches[0].clientY), {passive: true});
 
     class Firework {
-        constructor() { this.x = Math.random()*canvas.width; this.y = canvas.height; this.vel = Math.random()*-4-4; this.color = `hsl(${Math.random()*360}, 100%, 60%)`; this.exp = false; }
-        update() { this.y += this.vel; this.vel += 0.08; if(this.vel >= 0 && !this.exp) { this.exp = true; for(let i=0; i<20; i++) parts.push(new Particle(this.x, this.y, this.color)); } }
+        constructor() { this.x = Math.random()*canvas.width; this.y = canvas.height; this.vel = Math.random()*-3-3; this.color = `hsl(${Math.random()*360}, 100%, 60%)`; this.exp = false; }
+        update() { this.y += this.vel; this.vel += 0.05; if(this.vel >= 0 && !this.exp) { this.exp = true; for(let i=0; i<20; i++) parts.push(new Particle(this.x, this.y, this.color)); } }
         draw() { if(!this.exp) { ctx.fillStyle = this.color; ctx.beginPath(); ctx.arc(this.x, this.y, 2, 0, Math.PI*2); ctx.fill(); } }
     }
 
     class Particle {
         constructor(x, y, c, isHeart = false) { 
             this.x = x; this.y = y; this.c = c; this.isHeart = isHeart;
-            this.vx = Math.random()*8-4; this.vy = Math.random()*8-4; this.op = 1.2; 
+            this.vx = Math.random()*10-5; this.vy = Math.random()*10-5; this.op = 1.2; 
             this.size = isHeart ? Math.random()*15 + 12 : 1.5;
         }
-        update() { this.x += this.vx; this.y += this.vy; this.vy += this.isHeart ? 0.04 : 0.06; this.op -= 0.008; }
-        draw() { ctx.globalAlpha = Math.min(1, this.op); if(this.isHeart) { ctx.fillStyle = this.c; ctx.font = `${this.size}px serif`; ctx.fillText('❤️', this.x, this.y); } else { ctx.fillStyle = this.c; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fill(); } }
+        update() { this.x += this.vx; this.y += this.vy; this.vy += this.isHeart ? 0.03 : 0.05; this.op -= 0.008; }
+        draw() { 
+            ctx.globalAlpha = Math.max(0, Math.min(1, this.op)); 
+            if(this.isHeart) { ctx.fillStyle = this.c; ctx.font = `${this.size}px serif`; ctx.fillText('❤️', this.x, this.y); } 
+            else { ctx.fillStyle = this.c; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fill(); }
+        }
     }
 
     function loop() {
         ctx.fillStyle = bdayMode ? 'rgba(5,5,5,0.2)' : 'rgba(255, 240, 243, 1)';
         if(!bdayMode) ctx.clearRect(0,0,canvas.width, canvas.height); else ctx.fillRect(0,0,canvas.width, canvas.height);
-        if(bdayMode && Math.random() < 0.02) fworks.push(new Firework());
+        if(bdayMode && Math.random() < 0.015) fworks.push(new Firework());
         for(let i=fworks.length-1; i>=0; i--) { fworks[i].update(); fworks[i].draw(); if(fworks[i].exp && parts.length === 0) fworks.splice(i,1); }
         for(let i=parts.length-1; i>=0; i--) { parts[i].update(); parts[i].draw(); if(parts[i].op<=0) parts.splice(i,1); }
         requestAnimationFrame(loop);
