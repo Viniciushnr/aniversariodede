@@ -26,7 +26,7 @@
         body.dark-mode { background: #050505; }
         canvas { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 1; }
 
-        #secao-cartinha, #secao-mural {
+        #secao-cartinha, #secao-mural, #secao-video {
             position: relative; z-index: 10; width: 100%; display: flex; flex-direction: column; align-items: center;
         }
 
@@ -37,7 +37,7 @@
             min-height: 100vh;
         }
 
-        #secao-mural { display: none; padding: 40px 20px 120px 20px; justify-content: flex-start; min-height: 100vh; box-sizing: border-box; }
+        #secao-mural, #secao-video { display: none; padding: 40px 20px 120px 20px; justify-content: flex-start; min-height: 100vh; box-sizing: border-box; }
 
         h1 { 
             font-size: clamp(1.1rem, 5vw, 1.3rem); 
@@ -57,10 +57,7 @@
             margin-top: 15px;
         }
 
-        .envelope-wrapper.shake {
-            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
-        }
-
+        .envelope-wrapper.shake { animation: shake 0.4s both; }
         @keyframes shake {
             10%, 90% { transform: translate3d(-1px, 0, 0); }
             20%, 80% { transform: translate3d(2px, 0, 0); }
@@ -87,93 +84,58 @@
         .message-box {
             position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%);
             width: 330px; height: 200px; background: var(--cor-papel); border-radius: 8px;
-            padding: 10px; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            text-align: center;
-            color: var(--cor-texto); font-weight: 600; font-size: 1.1rem; 
-            line-height: 1.1; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            text-align: center; color: var(--cor-texto); font-weight: 600; font-size: 1.1rem; 
+            line-height: 1.1; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             z-index: 6; opacity: 0; transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s; 
-            box-sizing: border-box;
-            overflow: hidden;
+            box-sizing: border-box; overflow: hidden;
         }
 
         .envelope-wrapper.open .message-box { transform: translateX(-50%) translateY(-185px); opacity: 1; }
 
         #instrucao {
-            font-size: 1rem;
-            color: #b33951; 
+            font-size: 1rem; color: #b33951; font-family: 'Montserrat', sans-serif;
+            margin-top: 25px; font-weight: 800; opacity: 0.9; text-align: center;
+        }
+
+        .area-botoes { display: flex; gap: 15px; margin-top: 30px; flex-wrap: wrap; justify-content: center; }
+        .area-botoes button, #btnVoltar, #btnVoltarVideo { 
+            padding: 12px 25px; background: #ff4d6d; color: white; border: none; 
+            border-radius: 25px; font-weight: 800; cursor: pointer; 
+            display: none; box-shadow: 0 5px 15px rgba(255,77,109,0.4); 
             font-family: 'Montserrat', sans-serif;
-            margin-top: 25px; 
-            font-weight: 800;
-            opacity: 0.9;
-            text-align: center;
-            transition: opacity 0.5s ease;
         }
 
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; width: 100%; max-width: 1000px; }
-        
         .photo-card { 
-            background: white; padding: 12px 12px 8px 12px; 
-            border-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-            transition: transform 0.3s ease; cursor: pointer; 
-            text-align: center; position: relative; overflow: hidden;
+            background: white; padding: 12px 12px 8px 12px; border-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            transition: transform 0.3s ease; cursor: pointer; text-align: center; position: relative; overflow: hidden;
         }
         .photo-card:hover { transform: scale(1.05) rotate(1deg); }
 
-        .photo-card::after {
-            content: ''; position: absolute; top: 0; left: -150%; width: 50%; height: 100%;
-            background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 100% );
-            transform: skewX(-25deg); pointer-events: none;
-        }
-        .photo-card:hover::after { animation: shimmerEffect 1.2s infinite; }
-        @keyframes shimmerEffect { 100% { left: 150%; } }
-
-        .photo-card img { 
-            width: 100%; aspect-ratio: 1/1; object-fit: cover; 
-            filter: sepia(80%) blur(5px); 
-            transition: filter 1.8s cubic-bezier(0.4, 0, 0.2, 1); 
-            border-radius: 2px; 
-        }
+        .photo-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; filter: sepia(80%) blur(5px); transition: filter 1.8s; border-radius: 2px; }
         .photo-card.revelada img { filter: sepia(0%) blur(0px); }
-        
         .photo-card p { font-family: 'Caveat', cursive; font-size: 1.4rem; margin: 10px 0 0 0; opacity: 0; transition: opacity 1.5s; color: #444; }
         .photo-card.revelada p { opacity: 1; }
 
+        .video-container { width: 100%; max-width: 600px; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); background: #000; margin-top: 20px; }
+        video { width: 100%; display: block; }
+
         .modal { display: none; position: fixed; z-index: 1000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); flex-direction: column; align-items: center; justify-content: center; }
         .modal img { max-width: 90%; max-height: 75%; border: 12px solid white; border-radius: 4px; object-fit: contain; }
-        
-        #imgModal {
-            filter: sepia(80%) blur(5px);
-            transition: filter 1.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+        #imgModal { filter: sepia(80%) blur(5px); transition: filter 1.8s; }
         #imgModal.revelada { filter: sepia(0%) blur(0px); }
-
-        #modalCaption { color: white; font-family: 'Caveat', cursive; font-size: 2.2rem; margin-top: 20px; text-align: center; opacity: 0; transition: opacity 1.5s ease-in-out; }
+        #modalCaption { color: white; font-family: 'Caveat', cursive; font-size: 2.2rem; margin-top: 20px; text-align: center; opacity: 0; transition: opacity 1.5s; }
         #modalCaption.revelada { opacity: 1; }
         .fechar-modal { position: absolute; top: 20px; right: 25px; color: white; font-size: 45px; cursor: pointer; }
-
-        .rgb { 
-            display: inline-block;
-            margin: 2px 0;
-            font-weight: 800; 
-            font-size: 1.35rem;
-            background: linear-gradient(to right, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #8b00ff); 
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-            background-size: 200% auto; animation: rgb-anim 3s linear infinite; 
-        }
-
-        #btnMural, #btnVoltar { padding: 12px 35px; background: #ff4d6d; color: white; border: none; border-radius: 25px; font-weight: 800; cursor: pointer; margin-top: 30px; display: none; box-shadow: 0 5px 15px rgba(255,77,109,0.4); }
-        #btnVoltar { position: fixed; bottom: 30px; display: none; z-index: 100; }
 
         .foto-viva { position: fixed; z-index: 3; pointer-events: none; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); animation: floatUp linear forwards; }
         @keyframes floatUp { 0% { transform: translateY(110vh) rotate(0deg); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; } }
 
-        .trail-element { position: fixed; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); animation: moveUpFade 1s linear forwards; }
+        .trail-element { position: fixed; pointer-events: none; z-index: 9999; animation: moveUpFade 1s linear forwards; }
         @keyframes moveUpFade { 100% { transform: translate(-50%, -100px) scale(0.3); opacity: 0; } }
-        .trail-photo { width: 40px; height: 40px; border-radius: 8px; border: 2px solid white; object-fit: cover; }
-        .trail-heart { color: #ff4d6d; font-size: 20px; }
-
+        
+        .rgb { display: inline-block; margin: 2px 0; font-weight: 800; font-size: 1.35rem; background: linear-gradient(to right, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #8b00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 200% auto; animation: rgb-anim 3s linear infinite; }
         @keyframes rgb-anim { to { background-position: 200% center; } }
         @keyframes glow { from { text-shadow: 0 0 10px #ff4d6d; } to { text-shadow: 0 0 20px #ff758f, 0 0 30px #ff4d6d; } }
     </style>
@@ -190,7 +152,10 @@
         <div id="msg" class="message-box"></div>
     </div>
     <p id="instrucao">Clique na cartinha para abrir</p>
-    <button id="btnMural" onclick="irMural()">Ver Mural de Fotos</button>
+    <div class="area-botoes">
+        <button id="btnMural" onclick="irMural()">Ver Mural de Fotos</button>
+        <button id="btnVideo" onclick="irVideo()">Ver Vídeo</button>
+    </div>
 </div>
 
 <div id="secao-mural">
@@ -203,7 +168,17 @@
         <div class="photo-card" onclick="abrirFoto(this)"><img src="mural5.jpeg"><p>O corpão...</p></div>
         <div class="photo-card" onclick="abrirFoto(this)"><img src="mural6.jpg"><p>A fofura...</p></div>
     </div>
-    <button id="btnVoltar" onclick="irCartinha()">Voltar à Cartinha</button>
+    <button id="btnVoltar" onclick="irCartinha()" style="display: block; margin-top: 30px;">Voltar à Cartinha</button>
+</div>
+
+<div id="secao-video">
+    <h1 style="color: #ff4d6d; font-size: 32px; font-weight: 800; margin-bottom: 20px;">Um vídeo para você!!</h1>
+    <div class="video-container">
+        <video id="meuVideo" controls>
+            <source src="dedevideo.mp4" type="video/mp4">
+        </video>
+    </div>
+    <button id="btnVoltarVideo" onclick="irCartinha()" style="display: block; margin-top: 30px;">Voltar à Cartinha</button>
 </div>
 
 <div id="meuModal" class="modal" onclick="fecharFoto()">
@@ -213,20 +188,20 @@
 </div>
 
 <script>
-    window.onblur = () => document.title = "Ei, volta aqui! ❤️";
-    window.onfocus = () => document.title = "Para Debora";
+    window.onblur = () => document.title = "Volta aqui!!!";
+    window.onfocus = () => document.title = "Para você";
 
     const memorias = [
-            "Você é absurdamente<br><span class='rgb'>LINDA...</span>",
-            "Você é absurdamente<br><span class='rgb'>ESPECIAL...</span>",
-            "Você é a pessoa mais<br><span class='rgb'>INCRÍVEL</span> que conheço...",
-            "Você é a pessoa mais<br><span class='rgb'>PERFEITA</span> que conheço...",
-            "Você merece toda<br><span class='rgb'>FELICIDADE</span> do mundo nessa vida...",
-            "Você merece toda a<br><span class='rgb'>PAZ</span> do mundo nessa vida...",
-            "Você merece tudo o que é<br><span class='rgb'>BOM</span> nessa vida...",
-            "Você merece tudo o que te faz<br><span class='rgb'>BEM</span> nessa vida...",
-            "Você simplesmente merece<br><span class='rgb'>TUDO...</span>",
-            "<span class='rgb'>Feliz Aniversário!!!!</span>"
+        "Você é absurdamente<br><span class='rgb'>LINDA...</span>",
+        "Você é absurdamente<br><span class='rgb'>ESPECIAL...</span>",
+        "Você é a pessoa mais<br><span class='rgb'>INCRÍVEL</span> que conheço...",
+        "Você é a pessoa mais<br><span class='rgb'>PERFEITA</span> que conheço...",
+        "Você merece toda<br><span class='rgb'>FELICIDADE</span> do mundo...",
+        "Você merece toda a<br><span class='rgb'>PAZ</span> do mundo...",
+        "Você merece tudo o que é<br><span class='rgb'>BOM</span> nessa vida...",
+        "Você merece tudo o que te faz<br><span class='rgb'>BEM</span> nessa vida...",
+        "Você simplesmente merece<br><span class='rgb'>TUDO...</span>",
+        "<span class='rgb'>Feliz Aniversário!!!!</span>"
     ];
 
     let index = 0, bdayMode = false, trailIndex = 0, lastTrailTime = 0;
@@ -239,10 +214,7 @@
     function handleSurprise() {
         if (bdayMode) return;
         const env = document.getElementById('envelope'), box = document.getElementById('msg'), tit = document.getElementById('titulo'), ins = document.getElementById('instrucao');
-        const saltoTitulo = "-130px";
-
-        env.classList.add('shake');
-        setTimeout(() => env.classList.remove('shake'), 400);
+        env.classList.add('shake'); setTimeout(() => env.classList.remove('shake'), 400);
 
         if (env.classList.contains('open')) {
             env.classList.remove('open');
@@ -252,11 +224,8 @@
                 if (index < memorias.length) {
                     box.innerHTML = memorias[index];
                     env.classList.add('open');
-                    tit.style.transform = `translateY(${saltoTitulo})`;
-                    
-                    const rect = env.getBoundingClientRect();
-                    spawnHearts(rect.left + rect.width/2, rect.top + rect.height/2);
-
+                    tit.style.transform = "translateY(-130px)";
+                    spawnHearts(window.innerWidth/2, window.innerHeight/2);
                     if (index >= 9) ins.style.display = 'none';
                     if (index === memorias.length - 1) ativarModoBday();
                 }
@@ -264,146 +233,80 @@
         } else {
             box.innerHTML = memorias[index];
             env.classList.add('open');
-            tit.style.transform = `translateY(${saltoTitulo})`;
-            
-            const rect = env.getBoundingClientRect();
-            spawnHearts(rect.left + rect.width/2, rect.top + rect.height/2);
-
-            if (index >= 9) ins.style.display = 'none';
+            tit.style.transform = "translateY(-130px)";
+            spawnHearts(window.innerWidth/2, window.innerHeight/2);
         }
     }
 
-    function spawnHearts(x, y) {
-        for(let i=0; i<45; i++) {
-            parts.push(new Particle(x, y, '#ff0033', true));
-        }
-    }
+    function spawnHearts(x, y) { for(let i=0; i<45; i++) parts.push(new Particle(x, y, '#ff0033', true)); }
 
     function ativarModoBday() {
-        bdayMode = true;
-        musica.play().catch(() => {});
+        bdayMode = true; musica.play().catch(() => {});
         document.body.classList.add('dark-mode');
-        const tit = document.getElementById('titulo');
-        const box = document.getElementById('msg');
+        const tit = document.getElementById('titulo'), box = document.getElementById('msg');
         tit.innerText = "Parabéns, Dedéeeee!";
         tit.style.transform = "translateY(-135px)"; 
         box.style.transform = "translateX(-50%) translateY(-170px)"; 
         box.innerHTML = "<span class='rgb'>Feliz Aniversário!!!</span>";
         document.getElementById('btnMural').style.display = 'block';
+        document.getElementById('btnVideo').style.display = 'block';
         setInterval(spawnPhoto, 1200);
     }
 
-    function abrirFoto(container) {
-        const jaRevelada = container.classList.contains('revelada');
-        container.classList.add('revelada');
-        
-        const modal = document.getElementById("meuModal");
-        const imgModal = document.getElementById("imgModal");
-        const modalCap = document.getElementById("modalCaption");
-        
-        imgModal.src = container.querySelector('img').src;
-        modalCap.innerText = container.querySelector('p').innerText;
-        
-        // Se NÃO estava revelada, faz a animação lenta no modal
-        if (!jaRevelada) {
-            imgModal.classList.remove('revelada');
-            modalCap.classList.remove('revelada');
-            modal.style.display = "flex";
-            setTimeout(() => {
-                imgModal.classList.add('revelada');
-                modalCap.classList.add('revelada');
-            }, 100);
-        } else {
-            // Se já estava revelada, abre o modal já nítido instantaneamente
-            imgModal.classList.add('revelada');
-            modalCap.classList.add('revelada');
-            modal.style.display = "flex";
-        }
-    }
-
-    function fecharFoto() { document.getElementById("meuModal").style.display = "none"; }
-
     function spawnPhoto() {
-        if (document.querySelectorAll('.foto-viva').length > 6) return;
+        if (!bdayMode || document.querySelectorAll('.foto-viva').length > 6) return;
         const img = document.createElement('img');
         img.src = ['foto.png', 'foto2.png', 'foto3.png'][Math.floor(Math.random()*3)];
         img.className = 'foto-viva';
         img.style.left = Math.random()*85 + 'vw';
-        img.style.width = (Math.random()*30 + 50) + 'px';
+        img.style.width = '60px';
         img.style.animationDuration = (Math.random()*3 + 6) + 's';
         document.body.appendChild(img);
         img.addEventListener('animationend', () => img.remove());
     }
 
-    function irMural() {
-        document.getElementById('secao-cartinha').style.display = 'none';
-        document.getElementById('secao-mural').style.display = 'flex';
-        document.getElementById('btnVoltar').style.display = 'block';
-        window.scrollTo(0,0);
-    }
+    function irMural() { document.getElementById('secao-cartinha').style.display = 'none'; document.getElementById('secao-mural').style.display = 'flex'; }
+    function irVideo() { document.getElementById('secao-cartinha').style.display = 'none'; document.getElementById('secao-video').style.display = 'flex'; }
+    function irCartinha() { document.getElementById('secao-mural').style.display = 'none'; document.getElementById('secao-video').style.display = 'none'; document.getElementById('secao-cartinha').style.display = 'flex'; document.getElementById('meuVideo').pause(); }
 
-    function irCartinha() {
-        document.getElementById('secao-mural').style.display = 'none';
-        document.getElementById('secao-cartinha').style.display = 'flex';
-        document.getElementById('btnVoltar').style.display = 'none';
+    function abrirFoto(container) {
+        const jaRevelada = container.classList.contains('revelada'); container.classList.add('revelada');
+        const modal = document.getElementById("meuModal"), imgModal = document.getElementById("imgModal"), modalCap = document.getElementById("modalCaption");
+        imgModal.src = container.querySelector('img').src; modalCap.innerText = container.querySelector('p').innerText;
+        modal.style.display = "flex";
+        if (!jaRevelada) { imgModal.classList.remove('revelada'); modalCap.classList.remove('revelada'); setTimeout(() => { imgModal.classList.add('revelada'); modalCap.classList.add('revelada'); }, 100); }
+        else { imgModal.classList.add('revelada'); modalCap.classList.add('revelada'); }
     }
+    function fecharFoto() { document.getElementById("meuModal").style.display = "none"; }
 
     function createTrail(x, y) {
         const now = Date.now(); if (now - lastTrailTime < 350) return; lastTrailTime = now;
-        const el = document.createElement(bdayMode ? 'img' : 'div');
+        const el = bdayMode ? document.createElement('img') : document.createElement('div');
         el.className = 'trail-element';
-        if (bdayMode) { el.src = ['foto.png', 'foto2.png', 'foto3.png'][trailIndex++ % 3]; el.classList.add('trail-photo'); } 
-        else { el.innerHTML = '❤️'; el.classList.add('trail-heart'); }
-        el.style.left = x + 'px'; el.style.top = y + 'px';
+        if (bdayMode) { 
+            el.src = ['foto.png', 'foto2.png', 'foto3.png'][trailIndex++ % 3]; 
+            el.style.width = '40px'; el.style.height = '40px'; el.style.borderRadius = '8px'; el.style.border = '2px solid white'; el.style.objectFit = 'cover';
+        } else { el.innerHTML = '❤️'; el.style.color = '#ff4d6d'; el.style.fontSize = '20px'; }
+        el.style.left = x + 'px'; el.style.top = y + 'px'; el.style.transform = 'translate(-50%, -50%)';
         document.body.appendChild(el); setTimeout(() => el.remove(), 1000);
     }
     document.addEventListener('mousemove', (e) => createTrail(e.clientX, e.clientY));
     document.addEventListener('touchmove', (e) => createTrail(e.touches[0].clientX, e.touches[0].clientY), {passive: true});
 
     class Firework {
-        constructor() { 
-            this.x = Math.random()*canvas.width; 
-            this.y = canvas.height; 
-            this.vel = Math.random()*-8-7; 
-            this.color = `hsl(${Math.random()*360}, 100%, 60%)`; 
-            this.exp = false; 
-        }
-        update() { 
-            this.y += this.vel; 
-            this.vel += 0.15; 
-            if(this.vel >= 0 && !this.exp) { 
-                this.exp = true; 
-                for(let i=0; i<20; i++) parts.push(new Particle(this.x, this.y, this.color)); 
-            } 
-        }
+        constructor() { this.x = Math.random()*canvas.width; this.y = canvas.height; this.vel = Math.random()*-4-4; this.color = `hsl(${Math.random()*360}, 100%, 60%)`; this.exp = false; }
+        update() { this.y += this.vel; this.vel += 0.08; if(this.vel >= 0 && !this.exp) { this.exp = true; for(let i=0; i<20; i++) parts.push(new Particle(this.x, this.y, this.color)); } }
         draw() { if(!this.exp) { ctx.fillStyle = this.color; ctx.beginPath(); ctx.arc(this.x, this.y, 2, 0, Math.PI*2); ctx.fill(); } }
     }
 
     class Particle {
         constructor(x, y, c, isHeart = false) { 
-            this.x = x; this.y = y; this.c = c; 
-            this.isHeart = isHeart;
-            this.vx = Math.random()*12-6; 
-            this.vy = Math.random()*12-6; 
-            this.op = 1.2; 
+            this.x = x; this.y = y; this.c = c; this.isHeart = isHeart;
+            this.vx = Math.random()*8-4; this.vy = Math.random()*8-4; this.op = 1.2; 
             this.size = isHeart ? Math.random()*15 + 12 : 1.5;
         }
-        update() { 
-            this.x += this.vx; this.y += this.vy; 
-            this.vy += this.isHeart ? 0.04 : 0.08; 
-            this.op -= 0.008; 
-        }
-        draw() { 
-            ctx.globalAlpha = Math.min(1, this.op);
-            if(this.isHeart) {
-                ctx.fillStyle = this.c;
-                ctx.font = `${this.size}px serif`;
-                ctx.fillText('❤️', this.x, this.y);
-            } else {
-                ctx.fillStyle = this.c;
-                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fill(); 
-            }
-        }
+        update() { this.x += this.vx; this.y += this.vy; this.vy += this.isHeart ? 0.04 : 0.06; this.op -= 0.008; }
+        draw() { ctx.globalAlpha = Math.min(1, this.op); if(this.isHeart) { ctx.fillStyle = this.c; ctx.font = `${this.size}px serif`; ctx.fillText('❤️', this.x, this.y); } else { ctx.fillStyle = this.c; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fill(); } }
     }
 
     function loop() {
