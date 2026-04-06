@@ -178,16 +178,16 @@
 <div id="secao-video">
     <h1 style="color: #ff4d6d; font-size: 32px; font-weight: 800; margin-bottom: 20px;">Um vídeo para você!!</h1>
     <div class="video-container">
-<iframe 
-    id="playerYoutube"
-    width="100%" 
-    height="100%" 
-    src="https://www.youtube.com/embed/THTf_0w4tsg?rel=0&modestbranding=1&autoplay=1&mute=1&vq=hd1080&enablejsapi=1" 
-    title="YouTube video player" 
-    frameborder="0" 
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-    allowfullscreen>
-</iframe>
+        <iframe 
+            id="playerYoutube"
+            width="100%" 
+            height="100%" 
+            src="" 
+            title="YouTube video player" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+        </iframe>
     </div>
     <button id="btnVoltarVideo" onclick="irCartinha()" style="display: block; margin-top: 30px; padding: 12px 25px; background: #ff4d6d; color: white; border: none; border-radius: 25px; font-weight: 800; cursor: pointer; font-family: 'Montserrat', sans-serif;">Voltar à Cartinha</button>
 </div>
@@ -218,6 +218,9 @@
     let index = 0, bdayMode = false, trailIndex = 0, lastTrailTime = 0;
     const musica = document.getElementById('musica'), canvas = document.getElementById('mainCanvas'), ctx = canvas.getContext('2d');
     let parts = [], fworks = [];
+
+    // Link do vídeo com autoplay para carregar só quando abrir
+    const linkVideo = "https://www.youtube.com/embed/THTf_0w4tsg?rel=0&modestbranding=1&autoplay=1&mute=1&vq=hd1080&enablejsapi=1";
 
     function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
     window.onresize = resize; resize();
@@ -262,7 +265,6 @@
         box.innerHTML = "<span class='rgb'>Feliz Aniversário!!!</span>";
         document.getElementById('btnMural').style.display = 'block';
         document.getElementById('btnVideo').style.display = 'block';
-        
         setInterval(spawnPhoto, 1500);
     }
 
@@ -279,20 +281,20 @@
     }
 
     function irMural() { document.getElementById('secao-cartinha').style.display = 'none'; document.getElementById('secao-mural').style.display = 'flex'; }
-    function irVideo() { document.getElementById('secao-cartinha').style.display = 'none'; document.getElementById('secao-video').style.display = 'flex'; }
     
-    // ALTERAÇÃO NO NEGÓCIO DE PAUSE (PARA O YOUTUBE)
+    // SÓ CARREGA O VÍDEO AQUI
+    function irVideo() { 
+        document.getElementById('secao-cartinha').style.display = 'none'; 
+        document.getElementById('secao-video').style.display = 'flex'; 
+        document.getElementById('playerYoutube').src = linkVideo; 
+    }
+
+    // PARA O VÍDEO LIMPANDO O SRC
     function irCartinha() { 
         document.getElementById('secao-mural').style.display = 'none'; 
         document.getElementById('secao-video').style.display = 'none'; 
         document.getElementById('secao-cartinha').style.display = 'flex'; 
-
-        const iframe = document.getElementById('playerYoutube');
-        if (iframe) {
-            const url = iframe.src;
-            iframe.src = ""; // Para o vídeo
-            iframe.src = url; // Reseta para quando ela abrir de novo
-        }
+        document.getElementById('playerYoutube').src = ""; 
     }
 
     function abrirFoto(container) {
