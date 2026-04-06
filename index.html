@@ -118,8 +118,7 @@
         .photo-card p { font-family: 'Caveat', cursive; font-size: 1.4rem; margin: 10px 0 0 0; opacity: 0; transition: opacity 1.5s; color: #444; }
         .photo-card.revelada p { opacity: 1; }
 
-        .video-container { width: 100%; max-width: 600px; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); background: #000; margin-top: 20px; }
-        video { width: 100%; display: block; }
+        .video-container { width: 100%; max-width: 400px; aspect-ratio: 9/16; background: #000; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-top: 20px; }
 
         .modal { display: none; position: fixed; z-index: 1000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); flex-direction: column; align-items: center; justify-content: center; }
         .modal img { max-width: 90%; max-height: 75%; border: 12px solid white; border-radius: 4px; object-fit: contain; }
@@ -178,7 +177,7 @@
 
 <div id="secao-video">
     <h1 style="color: #ff4d6d; font-size: 32px; font-weight: 800; margin-bottom: 20px;">Um vídeo para você!!</h1>
-    <div class="video-container" style="width: 100%; max-width: 400px; aspect-ratio: 9/16; background: #000; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+    <div class="video-container">
 <iframe 
     id="playerYoutube"
     width="100%" 
@@ -264,7 +263,6 @@
         document.getElementById('btnMural').style.display = 'block';
         document.getElementById('btnVideo').style.display = 'block';
         
-        // Intervalo fixo para as fotos não pararem
         setInterval(spawnPhoto, 1500);
     }
 
@@ -282,7 +280,20 @@
 
     function irMural() { document.getElementById('secao-cartinha').style.display = 'none'; document.getElementById('secao-mural').style.display = 'flex'; }
     function irVideo() { document.getElementById('secao-cartinha').style.display = 'none'; document.getElementById('secao-video').style.display = 'flex'; }
-    function irCartinha() { document.getElementById('secao-mural').style.display = 'none'; document.getElementById('secao-video').style.display = 'none'; document.getElementById('secao-cartinha').style.display = 'flex'; document.getElementById('meuVideo').pause(); }
+    
+    // ALTERAÇÃO NO NEGÓCIO DE PAUSE (PARA O YOUTUBE)
+    function irCartinha() { 
+        document.getElementById('secao-mural').style.display = 'none'; 
+        document.getElementById('secao-video').style.display = 'none'; 
+        document.getElementById('secao-cartinha').style.display = 'flex'; 
+
+        const iframe = document.getElementById('playerYoutube');
+        if (iframe) {
+            const url = iframe.src;
+            iframe.src = ""; // Para o vídeo
+            iframe.src = url; // Reseta para quando ela abrir de novo
+        }
+    }
 
     function abrirFoto(container) {
         const jaRevelada = container.classList.contains('revelada'); container.classList.add('revelada');
